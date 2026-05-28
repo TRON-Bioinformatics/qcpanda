@@ -3,15 +3,15 @@ title: Contributing
 markdownPlugin: checklist
 ---
 
-# `TRON/qcpanda`: Contributing guidelines
+# `TRON-Bioinformatics/qcpanda`: Contributing guidelines
 
 Hi there!
-Thanks for taking an interest in improving TRON/qcpanda.
+Thanks for taking an interest in improving TRON-Bioinformatics/qcpanda.
 
-This page describes the recommended nf-core way to contribute to both TRON/qcpanda and nf-core pipelines in general, including:
+This page describes the recommended nf-core way to contribute to both TRON-Bioinformatics/qcpanda and nf-core pipelines in general, including:
 
 - [General contribution guidelines](#general-contribution-guidelines): common procedures or guides across all nf-core pipelines.
-- [Pipeline-specific contribution guidelines](#pipeline-specific-contribution-guidelines): procedures or guides specific to the development conventions of TRON/qcpanda.
+- [Pipeline-specific contribution guidelines](#pipeline-specific-contribution-guidelines): procedures or guides specific to the development conventions of TRON-Bioinformatics/qcpanda.
 
 ## General contribution guidelines
 
@@ -82,7 +82,7 @@ These tests are run with the latest available version of Nextflow and the minimu
 
 ### Pipeline contribution conventions
 
-nf-core semi-standardises how you write code and other contributions to make the TRON/qcpanda code and processing logic more understandable for new contributors and to ensure quality.
+nf-core semi-standardises how you write code and other contributions to make the TRON-Bioinformatics/qcpanda code and processing logic more understandable for new contributors and to ensure quality.
 
 #### Add a new pipeline step
 

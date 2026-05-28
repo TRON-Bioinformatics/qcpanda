@@ -1,11 +1,29 @@
-# TRON/qcpanda: Changelog
+# TRON-Bioinformatics/qcpanda: Changelog
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v2.0.1 - unreleased
+
+### `Added`
+
+### `Changed`
+
+- updated nft-utils from 0.0.3 to 1.0.0
+- updated default.nf.test and split the tests into multiple files
+- switch optional ngscm pateint_map input file from tsv to csv format
+- moved unittest data from `bin/tests/data/` to [TRON-Bioinformatics repo](https://github.com/TRON-Bioinformatics/test-datasets/tree/qcpanda/unittest_data)
+- increased GENERATE_MULTIQC_CONFIG process memory from 64.MB and 64.MB on repeat to 512.MB and 512.MB on repeat
+
+### `Fixed`
+
+- TRON/qcpanda renamed to TRON-Bioinformatics/qcpanda
+
+---
+
 ## v2.0.0 - 2026-05-23
 
-Complete rewrite of TRON/qcpanda as an [nf-core](https://nf-co.re/)-style pipeline using the [nf-core tools 4.0.1](https://github.com/nf-core/tools/releases/tag/4.0.1) template. The pipeline logic is preserved and extended; all breaking changes relative to v1.6.x are listed below.
+Complete rewrite of TRON-Bioinformatics/qcpanda as an [nf-core](https://nf-co.re/)-style pipeline using the [nf-core tools 4.0.1](https://github.com/nf-core/tools/releases/tag/4.0.1) template. The pipeline logic is preserved and extended; all breaking changes relative to v1.6.x are listed below.
 
 ### `Added`
 

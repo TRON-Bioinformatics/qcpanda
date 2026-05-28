@@ -1,0 +1,62 @@
+nextflow_pipeline {
+
+    name "Test pipeline skip_seqkit_pair true"
+    script "../main.nf"
+    tag "pipeline"
+
+    def TESTDATA = "https://raw.githubusercontent.com/TRON-Bioinformatics/test-datasets/qcpanda/default/"
+
+    test("-profile test,singularity --skip_seqkit_pair true --skip_fastqc true --skip_fastp true --skip_sequali true --skip_sortmerna true --skip_fastq_screen true --skip_kraken2 true --skip_seqkit_sana true --skip_bracken true --skip_sankey true --skip_ngscm true") {
+
+        setup {
+            def csv = new File("$outputDir/samplesheet.csv")
+            csv.parentFile.mkdirs()
+            csv.text = [
+                "sample,fastq_1,fastq_2",
+                "SAMPLE_PE_EQUAL,${TESTDATA}ERR6503616_1_down1.fastq.gz,${TESTDATA}ERR6503616_2_down1.fastq.gz",
+                "SAMPLE_PE_UNEQUAL,${TESTDATA}ERR6503616_1_down1.fastq.gz,${TESTDATA}ERR6503616_2_down1_half.fastq.gz",
+            ].join("\n")
+        }
+
+        when {
+            params {
+                outdir            = "$outputDir"
+                input             = "$outputDir/samplesheet.csv"
+                skip_seqkit_pair  = true
+                skip_fastqc       = true
+                skip_fastp        = true
+                skip_sequali      = true
+                skip_sortmerna    = true
+                skip_fastq_screen = true
+                skip_kraken2      = true
+                skip_seqkit_sana  = true
+                skip_bracken      = true
+                skip_sankey       = true
+                skip_ngscm        = true
+            }
+        }
+
+        then {
+            def stable_path = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}', 'samplesheet.csv'])
+            def stable_content = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore', ignore: ['samplesheet.csv'])
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.trace.succeeded().size(),
+                    removeFromYamlMap("$outputDir/pipeline_info/qcpanda_software_mqc_versions.yml", "Workflow"),
+                    stable_path,
+                    stable_content
+                ).match() }
+            )
+        }
+
+        cleanup {
+            if (System.getenv("CI") == "true") {
+                if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                    "docker system prune -a -f --volumes".execute()
+                }
+                new File("${launchDir}").deleteDir()
+            }
+        }
+    }
+}

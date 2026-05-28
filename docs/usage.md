@@ -1,10 +1,10 @@
-# TRON/qcpanda: Usage
+# TRON-Bioinformatics/qcpanda: Usage
 
 > _Documentation of pipeline parameters is generated automatically from the pipeline schema and can no longer be found in markdown files._
 
 ## Introduction
 
-TRON/qcpanda runs a battery of quality control tools on Illumina paired-end (or single-end) FASTQ data and aggregates all results into a single interactive MultiQC report. The pipeline covers read sanitisation, adapter trimming, contamination screening, rRNA quantification, taxonomic classification with Sankey visualisation, and optional sample identity verification via NGSCheckMate.
+TRON-Bioinformatics/qcpanda runs a battery of quality control tools on Illumina paired-end (or single-end) FASTQ data and aggregates all results into a single interactive MultiQC report. The pipeline covers read sanitisation, adapter trimming, contamination screening, rRNA quantification, taxonomic classification with Sankey visualisation, and optional sample identity verification via NGSCheckMate.
 
 Several steps require external reference databases or configuration files to be provided at run time (see [Reference databases](#reference-databases) below). Steps that depend on these files are skipped by default and must be explicitly enabled.
 
@@ -89,7 +89,7 @@ One FASTA path per line. Files may be plain (`.fa`, `.fasta`) or gzip-compressed
 The typical command for running the pipeline is as follows:
 
 ```bash
-nextflow run TRON/qcpanda \
+nextflow run TRON-Bioinformatics/qcpanda \
    -profile docker \
    --input samplesheet.csv \
    --outdir ./results \
@@ -101,7 +101,7 @@ nextflow run TRON/qcpanda \
 To also enable SortMeRNA rRNA quantification (disabled by default):
 
 ```bash
-nextflow run TRON/qcpanda \
+nextflow run TRON-Bioinformatics/qcpanda \
    -profile docker \
    --input samplesheet.csv \
    --outdir ./results \
@@ -134,7 +134,7 @@ Pipeline settings can be provided in a `yaml` or `json` file via `-params-file <
 The above pipeline run specified with a params file in yaml format:
 
 ```bash
-nextflow run TRON/qcpanda -profile docker -params-file params.yaml
+nextflow run TRON-Bioinformatics/qcpanda -profile docker -params-file params.yaml
 ```
 
 with:
@@ -206,18 +206,18 @@ All major pipeline steps can be disabled individually. Steps that are **on** by 
 
 ### NGSCheckMate options
 
-| Parameter                   | Default | Description                                                                                                                                                                             |
-| --------------------------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `--execute_ngscm_threshold` | `0.4`   | Minimum fraction (0–1) of reads assigned to `--ngscm_organism` in the Kraken2 report required to run NGSCheckMate on a sample. Samples below this threshold are skipped silently.       |
-| `--ngscm_patient_map`       | —       | Optional tab-separated file with columns `patient` and `sample`. When provided, NGSCheckMate analysis is run per-patient and plots are coloured/grouped accordingly. See example below. |
+| Parameter                   | Default | Description                                                                                                                                                                               |
+| --------------------------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--execute_ngscm_threshold` | `0.4`   | Minimum fraction (0–1) of reads assigned to `--ngscm_organism` in the Kraken2 report required to run NGSCheckMate on a sample. Samples below this threshold are skipped silently.         |
+| `--ngscm_patient_map`       | —       | Optional comma-separated file with columns `patient` and `sample`. When provided, NGSCheckMate analysis is run per-patient and plots are coloured/grouped accordingly. See example below. |
 
 #### Example patient map
 
-```tsv title="patient_map.tsv"
-patient	sample
-PATIENT_1	SAMPLE_A_L001
-PATIENT_1	SAMPLE_A_L002
-PATIENT_2	SAMPLE_B_L001
+```csv title="patient_map.csv"
+patient,sample
+PATIENT_1,SAMPLE_A_L001
+PATIENT_1,SAMPLE_A_L002
+PATIENT_2,SAMPLE_B_L001
 ```
 
 The `patient` column groups samples that are expected to match (e.g. different timepoints or replicates from the same donor). The `sample` values must match exactly the `sample` column in your input samplesheet.

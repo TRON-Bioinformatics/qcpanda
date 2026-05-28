@@ -1,7 +1,7 @@
 <!--
-# TRON/qcpanda pull request
+# TRON-Bioinformatics/qcpanda pull request
 
-Many thanks for contributing to TRON/qcpanda!
+Many thanks for contributing to TRON-Bioinformatics/qcpanda!
 
 Please fill in the appropriate checklist below (delete whatever is not relevant).
 These are the most common things requested on pull requests (PRs).

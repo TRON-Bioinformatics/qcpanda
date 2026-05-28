@@ -65,7 +65,7 @@ nextflow_process {
                         file("https://raw.githubusercontent.com/TRON-Bioinformatics/test-datasets/qcpanda/modules/ngscm_analysis/SAMPLE_C.vaf", checkIfExists: true)
                     ]
                 ]
-                input[1] = file("https://raw.githubusercontent.com/TRON-Bioinformatics/test-datasets/qcpanda/modules/ngscm_analysis/patient_map.tsv", checkIfExists: true)
+                input[1] = file("https://raw.githubusercontent.com/TRON-Bioinformatics/test-datasets/qcpanda/modules/ngscm_analysis/patient_map.csv", checkIfExists: true)
                 """
             }
         }

@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://raw.githubusercontent.com/TRON/qcpanda/master/assets/schema_input.json",
-  "title": "TRON/qcpanda pipeline - params.input schema",
+  "$id": "https://raw.githubusercontent.com/TRON-Bioinformatics/qcpanda/master/assets/schema_input.json",
+  "title": "TRON-Bioinformatics/qcpanda pipeline - params.input schema",
   "description": "Schema for the file provided with params.input",
   "type": "array",
   "items": {

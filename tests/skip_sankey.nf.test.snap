@@ -1,0 +1,89 @@
+{
+    "Params: --skip_sankey true": {
+        "content": [
+            11,
+            {
+                "BRACKEN_BRACKEN": {
+                    "bracken": "3.0.1"
+                },
+                "BRACKEN_READ_LENGTH": {
+                    "bracken_read_length": "3.12.12"
+                },
+                "KRAKEN2_KRAKEN2": {
+                    "kraken2": "2.1.6",
+                    "pigz": 2.8
+                },
+                "KRAKEN2_RATIOS": {
+                    "gawk": "5.3.0, API 4.0, PMA Avon 8-g1, (GNU MPFR 4.2.1, GNU MP 6.3.0)"
+                },
+                "SEQKIT_SAMPLE": {
+                    "seqkit": "2.13.0"
+                },
+                "SEQKIT_STATS": {
+                    "seqkit": "2.9.0"
+                },
+                "UNTAR_KRAKEN2_DB": {
+                    "untar": 1.34
+                }
+            },
+            [
+                "bracken",
+                "bracken/SAMPLE_PE_EQUAL.kraken2.report_bracken.txt",
+                "bracken/SAMPLE_PE_EQUAL.tsv",
+                "kraken2",
+                "kraken2/SAMPLE_PE_EQUAL.kraken2.report.txt",
+                "multiqc",
+                "multiqc/multiqc_config.yaml",
+                "multiqc/multiqc_data",
+                "multiqc/multiqc_data/kraken-top-n-plot_Class.txt",
+                "multiqc/multiqc_data/kraken-top-n-plot_Domain.txt",
+                "multiqc/multiqc_data/kraken-top-n-plot_Family.txt",
+                "multiqc/multiqc_data/kraken-top-n-plot_Genus.txt",
+                "multiqc/multiqc_data/kraken-top-n-plot_Order.txt",
+                "multiqc/multiqc_data/kraken-top-n-plot_Phylum.txt",
+                "multiqc/multiqc_data/kraken-top-n-plot_Species.txt",
+                "multiqc/multiqc_data/kraken-top-n-plot_Unclassified.txt",
+                "multiqc/multiqc_data/llms-full.txt",
+                "multiqc/multiqc_data/multiqc.log",
+                "multiqc/multiqc_data/multiqc.parquet",
+                "multiqc/multiqc_data/multiqc_bracken_bargraph_plot.txt",
+                "multiqc/multiqc_data/multiqc_citations.txt",
+                "multiqc/multiqc_data/multiqc_data.json",
+                "multiqc/multiqc_data/multiqc_general_stats.txt",
+                "multiqc/multiqc_data/multiqc_kraken.txt",
+                "multiqc/multiqc_data/multiqc_software_versions.txt",
+                "multiqc/multiqc_data/multiqc_sources.txt",
+                "multiqc/multiqc_report.html",
+                "pipeline_info",
+                "pipeline_info/qcpanda_software_mqc_versions.yml",
+                "seqkit",
+                "seqkit/sample",
+                "seqkit/stats",
+                "seqkit/stats/SAMPLE_PE_EQUAL.tsv"
+            ],
+            [
+                "SAMPLE_PE_EQUAL.kraken2.report_bracken.txt:md5,ed3623fcdc56f607b7f790677043c6d8",
+                "SAMPLE_PE_EQUAL.tsv:md5,263be96e7100401dcbc01c1aedd9d4da",
+                "SAMPLE_PE_EQUAL.kraken2.report.txt:md5,593f9e96de294b6fbd1168eb37f58b45",
+                "kraken-top-n-plot_Class.txt:md5,dcf1640c4c22b25a667bb835077ca0f1",
+                "kraken-top-n-plot_Domain.txt:md5,d3bda13db01ab6f0e6d8e6cc4f432704",
+                "kraken-top-n-plot_Family.txt:md5,66f27d09878a0ee788bb452d5b6a4f06",
+                "kraken-top-n-plot_Genus.txt:md5,0a179340b1ed0009bb551099b6be6c23",
+                "kraken-top-n-plot_Order.txt:md5,623e0ad33e78ee52b4308ea5138e2599",
+                "kraken-top-n-plot_Phylum.txt:md5,f556925003cf8d960eff7239fc01f23a",
+                "kraken-top-n-plot_Species.txt:md5,8e41b363155c2387eebc480101f94741",
+                "kraken-top-n-plot_Unclassified.txt:md5,1ae0da70667002d2b29ca469fcf3f130",
+                "multiqc_bracken_bargraph_plot.txt:md5,2a510e96a58289fc8a61d7edb2407edd",
+                "multiqc_citations.txt:md5,6c7f11ec8908181ce5daed75ddb6dc32",
+                "multiqc_general_stats.txt:md5,9a2fb44b7fbba907de2c5e97f4fb5a2e",
+                "multiqc_kraken.txt:md5,f98c8a6f60103b9ede18e5cce9ee5178",
+                "SAMPLE_PE_EQUAL.tsv:md5,fb18d5b33212140da7406b97f3589785"
+            ]
+        ],
+        "timestamp": "2026-05-27T10:50:38.706190251",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.0"
+        }
+    }
+}

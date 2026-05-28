@@ -1,4 +1,4 @@
-# TRON/qcpanda: Output
+# TRON-Bioinformatics/qcpanda: Output
 
 ## Introduction
 

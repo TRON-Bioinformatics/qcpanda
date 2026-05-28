@@ -1,4 +1,4 @@
-# TRON/qcpanda
+# TRON-Bioinformatics/qcpanda
 
 [![GitHub Actions CI Status](https://github.com/TRON-Bioinformatics/qcpanda/actions/workflows/nf-test.yml/badge.svg)](https://github.com/TRON-Bioinformatics/qcpanda/actions/workflows/nf-test.yml)
 [![GitHub Actions Linting Status](https://github.com/TRON-Bioinformatics/qcpanda/actions/workflows/linting.yml/badge.svg)](https://github.com/TRON-Bioinformatics/qcpanda/actions/workflows/linting.yml)
@@ -9,14 +9,14 @@
 [![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)
 [![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)
 [![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)
-[![Launch on Seqera Platform](https://img.shields.io/badge/Launch%20%F0%9F%9A%80-Seqera%20Platform-%234256e7)](https://cloud.seqera.io/launch?pipeline=https://github.com/TRON/qcpanda)
+[![Launch on Seqera Platform](https://img.shields.io/badge/Launch%20%F0%9F%9A%80-Seqera%20Platform-%234256e7)](https://cloud.seqera.io/launch?pipeline=https://github.com/TRON-Bioinformatics/qcpanda)
 
 ## Introduction
 
-**TRON/qcpanda** is a bioinformatics pipeline for comprehensive quality control of both paired-end and single-end FASTQ data. It performs read sanitisation, adapter trimming, contamination screening against multiple reference genomes, rRNA quantification, taxonomic classification with abundance estimation, and optional sample identity verification. Results from all tools are aggregated into a single interactive MultiQC report including organism composition Sankey plots and custom NGSCheckMate plots.
+**TRON-Bioinformatics/qcpanda** is a bioinformatics pipeline for comprehensive quality control of both paired-end and single-end FASTQ data. It performs read sanitisation, adapter trimming, contamination screening against multiple reference genomes, rRNA quantification, taxonomic classification with abundance estimation, and optional sample identity verification. Results from all tools are aggregated into a single interactive MultiQC report including organism composition Sankey plots and custom NGSCheckMate plots.
 
-<!-- ![TRON/qcpanda workflow](QC_Panda_schma.png) -->
-<img src="QC_Panda_schma.png" width="70%">
+<!-- ![TRON-Bioinformatics/qcpanda workflow](QC_Panda_schma.png) -->
+<img src="assets/QC_Panda_schma.png" width="70%">
 
 The pipeline executes the following steps. Steps marked _optional_ are skipped unless the corresponding parameter is supplied:
 
@@ -52,27 +52,28 @@ Each row represents one sample. Paired-end samples require both `fastq_1` and `f
 
 Optionally, provide a patient–sample map to group samples by patient for NGSCheckMate analysis and plots:
 
-`patient_map.tsv`:
+`patient_map.csv`:
 
-```tsv
-patient	sample
-PATIENT_01	SAMPLE_PE1
-PATIENT_01	SAMPLE_PE2
-PATIENT_02	SAMPLE_SE1
+```csv
+patient,sample
+PATIENT_01,SAMPLE_PE1
+PATIENT_01,SAMPLE_PE2
+PATIENT_02,SAMPLE_SE1
 ```
 
 Now, you can run the pipeline using:
 
 ```bash
-nextflow run TRON/qcpanda \
+nextflow run TRON-Bioinformatics/qcpanda \
    -profile <docker/singularity/.../institute> \
+   -work-dir <WORKDIR> \
    --input samplesheet.csv \
    --outdir <OUTDIR> \
    --kraken2_db /path/to/kraken2_db \
    --bracken_db /path/to/bracken_db \
    --fastq_screen_references /path/to/fastq_screen_references.csv \
    --ngscm_snp_patternsfile /path/to/SNP.pt \
-   --ngscm_patient_map patient_map.tsv
+   --ngscm_patient_map patient_map.csv
 ```
 
 Use `-profile docker` or `-profile singularity` to run with containers (recommended). Other options include `conda`, `apptainer`, and institute-specific profiles. See the [nf-core docs](https://nf-co.re/docs/running/run-pipelines#profiles) for details.
@@ -82,7 +83,7 @@ Use `-profile docker` or `-profile singularity` to run with containers (recommen
 
 ## Credits
 
-TRON/qcpanda was originally written by Patrick Sorn, Ivan Baksic, Johannes Hausmann, Jonas Ibn-Salem.
+TRON-Bioinformatics/qcpanda was originally written by Patrick Sorn, Ivan Baksic, Johannes Hausmann, Jonas Ibn-Salem.
 
 We thank the following people for their extensive assistance in the development of this pipeline:
 
