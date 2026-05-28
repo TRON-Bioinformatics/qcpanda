@@ -1,0 +1,13 @@
+.nextflow*
+.nf-test.log
+.nf-test*
+results/
+test.xml
+testing*
+testing/
+work/
+null/
+conf/containers_*
+bin/analysis/
+__pycache__/
+*.pyc

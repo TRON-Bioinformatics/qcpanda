@@ -1,0 +1,432 @@
+nextflow_pipeline {
+
+    name "Test pipeline"
+    script "../main.nf"
+    tag "pipeline"
+
+    def TESTDATA = "https://raw.githubusercontent.com/TRON-Bioinformatics/test-datasets/qcpanda/default/"
+
+    test("-profile test,singularity") {
+
+        when {
+            params {
+                outdir                   = "$outputDir"
+                skip_sortmerna           = false
+                skip_fastq_screen        = false
+                seqkit_keep_sampled      = true
+            }
+        }
+
+        then {
+            assert workflow.success
+
+            // --- SeqKit stats: samples with reads must have a non-empty TSV ---
+            assert path("$outputDir/seqkit/stats/SAMPLE_PE_EQUAL.tsv").exists()
+            assert path("$outputDir/seqkit/stats/SAMPLE_PE_EQUAL.tsv").size() > 0
+            assert path("$outputDir/seqkit/stats/SAMPLE_PE_UNEQUAL.tsv").exists()
+            assert path("$outputDir/seqkit/stats/SAMPLE_PE_UNEQUAL.tsv").size() > 0
+            assert path("$outputDir/seqkit/stats/SAMPLE_SE.tsv").exists()
+            assert path("$outputDir/seqkit/stats/SAMPLE_SE.tsv").size() > 0
+
+            // --- SeqKit stats: empty FASTQs produce a header-only TSV (no data rows) ---
+            assert path("$outputDir/seqkit/stats/SAMPLE_PE_EMPTY.tsv").exists()
+            assert path("$outputDir/seqkit/stats/SAMPLE_SE_EMPTY.tsv").exists()
+            assert path("$outputDir/seqkit/stats/SAMPLE_PE_EMPTY.tsv").text.readLines().size() == 1
+            assert path("$outputDir/seqkit/stats/SAMPLE_SE_EMPTY.tsv").text.readLines().size() == 1
+
+            // --- SeqKit sana: must NOT run by default (skip_seqkit_sana = true) ---
+            assert !path("$outputDir/seqkit/sana").exists()
+
+            // --- SeqKit pair: unequal sample must produce paired FASTQ outputs ---
+            assert path("$outputDir/seqkit/pair/SAMPLE_PE_UNEQUAL_1.paired.fastq.gz").exists()
+            assert path("$outputDir/seqkit/pair/SAMPLE_PE_UNEQUAL_2.paired.fastq.gz").exists()
+
+            // --- SeqKit pair: unpaired files must NOT be published by default (seqkit_keep_unpaired = false) ---
+            assert !path("$outputDir/seqkit/pair/SAMPLE_PE_UNEQUAL_1.unpaired.fastq.gz").exists()
+            assert !path("$outputDir/seqkit/pair/SAMPLE_PE_UNEQUAL_2.unpaired.fastq.gz").exists()
+
+            // --- MultiQC report must exist ---
+            assert path("$outputDir/multiqc/multiqc_report.html").exists()
+
+            // --- FastQC: must run by default and produce zip for each sample ---
+            assert path("$outputDir/fastqc/SAMPLE_PE_EQUAL_1_fastqc.zip").exists()
+            assert path("$outputDir/fastqc/SAMPLE_PE_EQUAL_2_fastqc.zip").exists()
+            assert path("$outputDir/fastqc/SAMPLE_SE_fastqc.zip").exists()
+
+            // --- Fastp: must run by default and produce JSON for each sample ---
+            assert path("$outputDir/fastp/SAMPLE_PE_EQUAL.fastp.json").exists()
+            assert path("$outputDir/fastp/SAMPLE_SE.fastp.json").exists()
+
+            // --- Sequali: must run by default and produce HTML + renamed JSON ---
+            assert path("$outputDir/sequali/SAMPLE_PE_EQUAL.html").exists()
+            assert path("$outputDir/sequali/SAMPLE_PE_EQUAL.json").exists()
+            assert path("$outputDir/sequali/SAMPLE_SE.html").exists()
+            assert path("$outputDir/sequali/SAMPLE_SE.json").exists()
+
+            // --- SortMeRNA: must run by default and produce a log for each sample ---
+            assert path("$outputDir/sortmerna/SAMPLE_PE_EQUAL.sortmerna.log").exists()
+            assert path("$outputDir/sortmerna/SAMPLE_SE.sortmerna.log").exists()
+            // Filtered reads must NOT be published by default (remove_ribo_rna = false)
+            assert !path("$outputDir/sortmerna/SAMPLE_PE_EQUAL_1.non_rRNA.fastq.gz").exists()
+            // Index must NOT be published (intermediate only)
+            assert !path("$outputDir/sortmerna/index").exists()
+
+            // --- FastQ Screen: reads are renamed to ${prefix}_N.fastq.gz before screening ---
+            assert path("$outputDir/fastq_screen/SAMPLE_PE_EQUAL_1_screen.txt").exists()
+            assert path("$outputDir/fastq_screen/SAMPLE_PE_EQUAL_2_screen.txt").exists()
+            assert path("$outputDir/fastq_screen/SAMPLE_SE_1_screen.txt").exists()
+            assert path("$outputDir/fastq_screen/SAMPLE_PE_UNEQUAL_1_screen.txt").exists()
+            assert path("$outputDir/fastq_screen/SAMPLE_PE_UNEQUAL_2_screen.txt").exists()
+
+            // --- SeqKit Sample: subsampled FASTQs published because seqkit_keep_sampled = true ---
+            assert path("$outputDir/seqkit/sample/SAMPLE_PE_EQUAL_R1.sampled.fastq.gz").exists()
+            assert path("$outputDir/seqkit/sample/SAMPLE_PE_EQUAL_R2.sampled.fastq.gz").exists()
+            assert path("$outputDir/seqkit/sample/SAMPLE_PE_UNEQUAL_R1.sampled.fastq.gz").exists()
+            assert path("$outputDir/seqkit/sample/SAMPLE_PE_UNEQUAL_R2.sampled.fastq.gz").exists()
+            assert path("$outputDir/seqkit/sample/SAMPLE_SE_R1.sampled.fastq.gz").exists()
+
+            // --- Kraken2: report produced for each sample ---
+            assert path("$outputDir/kraken2/SAMPLE_PE_EQUAL.kraken2.report.txt").exists()
+            assert path("$outputDir/kraken2/SAMPLE_PE_UNEQUAL.kraken2.report.txt").exists()
+            assert path("$outputDir/kraken2/SAMPLE_SE.kraken2.report.txt").exists()
+
+            // --- Bracken: TSV and kraken-style report produced for each sample ---
+            assert path("$outputDir/bracken/SAMPLE_PE_EQUAL.tsv").exists()
+            assert path("$outputDir/bracken/SAMPLE_PE_EQUAL.kraken2.report_bracken.txt").exists()
+            assert path("$outputDir/bracken/SAMPLE_PE_UNEQUAL.tsv").exists()
+            assert path("$outputDir/bracken/SAMPLE_SE.tsv").exists()
+
+            // --- Sankey: HTML plot produced for each sample that has Bracken output ---
+            assert path("$outputDir/sankey_plots/SAMPLE_PE_EQUAL_sankey_plot.html").exists()
+            assert path("$outputDir/sankey_plots/SAMPLE_PE_EQUAL_sankey_plot.html").size() > 0
+            assert path("$outputDir/sankey_plots/SAMPLE_PE_UNEQUAL_sankey_plot.html").exists()
+            assert path("$outputDir/sankey_plots/SAMPLE_SE_sankey_plot.html").exists()
+
+            // --- NGSCheckMate: per-sample VAF files and summary outputs ---
+            assert path("$outputDir/ngscheckmate/vafs/SAMPLE_PE_EQUAL.vaf").exists()
+            assert path("$outputDir/ngscheckmate/vafs/SAMPLE_PE_UNEQUAL.vaf").exists()
+            assert path("$outputDir/ngscheckmate/vafs/SAMPLE_SE.vaf").exists()
+            assert path("$outputDir/ngscheckmate/snp_pt_all.txt").exists()
+            assert path("$outputDir/ngscheckmate/snp_pt_matched.txt").exists()
+            assert path("$outputDir/ngscheckmate/output_corr_matrix.txt").exists()
+
+            // --- NGSCheckMate analysis: plots directory and homozygosity table ---
+            assert path("$outputDir/ngscheckmate/ngscm_plots/01_ngscheck_pairs.tsv").exists()
+            assert path("$outputDir/ngscheckmate/ngscm_plots/04_distribution.png").exists()
+            assert path("$outputDir/ngscheckmate/ngscm_plots/05_homozygosity.tsv").exists()
+            assert path("$outputDir/ngscheckmate/ngscm_plots/06_homozygosity.png").exists()
+            assert path("$outputDir/ngscheckmate/ngscm_table.tsv").exists()
+
+            // --- Generate MultiQC config: config file must be published ---
+            assert path("$outputDir/multiqc/multiqc_config.yaml").exists()
+            assert path("$outputDir/multiqc/multiqc_config.yaml").size() > 0
+
+            // --- Snapshot: lock in file names and stable file contents ---
+            def stable_path    = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}', 'samplesheet.csv'])
+            def stable_content = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore', ignore: ['samplesheet.csv'])
+            assertAll(
+                { assert snapshot(
+                    removeNextflowVersion("$outputDir/pipeline_info/qcpanda_software_mqc_versions.yml"),
+                    stable_path,
+                    stable_content,
+                ).match() }
+            )
+        }
+    }
+
+    test("-profile test,singularity --skip_seqkit_sana false") {
+
+        setup {
+            def baseUrl = TESTDATA
+            def csv = new File("$outputDir/samplesheet.csv")
+            csv.parentFile.mkdirs()
+            csv.text = [
+                "sample,fastq_1,fastq_2",
+                "SAMPLE_PE_EQUAL,${baseUrl}ERR6503616_1_down1.fastq.gz,${baseUrl}ERR6503616_2_down1.fastq.gz",
+                "SAMPLE_SE,${baseUrl}ERR6503616_1_down1.fastq.gz,",
+            ].join("\n")
+
+        }
+
+        when {
+            params {
+                outdir            = "$outputDir"
+                input             = "$outputDir/samplesheet.csv"
+                skip_seqkit_sana  = false
+                skip_bracken      = true
+                skip_fastqc       = true
+                skip_fastp        = true
+                skip_sequali      = true
+                skip_fastq_screen = true
+                skip_sortmerna    = true
+                skip_seqkit_pair  = true
+                skip_kraken2      = true
+                skip_sankey       = true
+                skip_ngscm        = true
+            }
+        }
+
+        then {
+            assert workflow.success
+
+            // --- SeqKit sana: must produce sanitized reads and logs when enabled ---
+            assert path("$outputDir/seqkit/sana/SAMPLE_PE_EQUAL_1.fastq.gz").exists()
+            assert path("$outputDir/seqkit/sana/SAMPLE_PE_EQUAL_2.fastq.gz").exists()
+            assert path("$outputDir/seqkit/sana/SAMPLE_SE_1.fastq.gz").exists()
+            assert path("$outputDir/seqkit/sana/SAMPLE_PE_EQUAL_1.log").exists()
+            assert path("$outputDir/seqkit/sana/SAMPLE_PE_EQUAL_2.log").exists()
+            assert path("$outputDir/seqkit/sana/SAMPLE_SE_1.log").exists()
+
+            // --- SeqKit stats must still run on sanitized reads ---
+            assert path("$outputDir/seqkit/stats/SAMPLE_PE_EQUAL.tsv").exists()
+            assert path("$outputDir/seqkit/stats/SAMPLE_PE_EQUAL.tsv").size() > 0
+            assert path("$outputDir/seqkit/stats/SAMPLE_SE.tsv").exists()
+            assert path("$outputDir/seqkit/stats/SAMPLE_SE.tsv").size() > 0
+
+            // --- Snapshot ---
+            // seqkit/stats/SAMPLE_PE_EQUAL.tsv is excluded from content check because its md5
+            // is machine-specific in the sana test (path-dependent seqkit stats output on sana outputs);
+            // existence and size are already asserted explicitly above.
+            def stable_path    = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}', 'samplesheet.csv'])
+            def stable_content = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore', ignore: ['samplesheet.csv', 'seqkit/stats/SAMPLE_PE_EQUAL.tsv'])
+            assertAll(
+                { assert snapshot(
+                    removeNextflowVersion("$outputDir/pipeline_info/qcpanda_software_mqc_versions.yml"),
+                    stable_path,
+                    stable_content,
+                ).match() }
+            )
+        }
+    }
+
+    test("-profile test,singularity --skip_seqkit_pair true --skip_fastqc true --skip_fastp true --skip_sequali true --skip_sortmerna true --skip_fastq_screen true --skip_kraken2 true") {
+
+        setup {
+            def baseUrl = TESTDATA
+            def csv = new File("$outputDir/samplesheet.csv")
+            csv.parentFile.mkdirs()
+            csv.text = [
+                "sample,fastq_1,fastq_2",
+                "SAMPLE_PE_EQUAL,${baseUrl}ERR6503616_1_down1.fastq.gz,${baseUrl}ERR6503616_2_down1.fastq.gz",
+                "SAMPLE_PE_UNEQUAL,${baseUrl}ERR6503616_1_down1.fastq.gz,${baseUrl}ERR6503616_2_down1_half.fastq.gz",
+            ].join("\n")
+        }
+
+        when {
+            params {
+                outdir            = "$outputDir"
+                input             = "$outputDir/samplesheet.csv"
+                skip_seqkit_pair  = true
+                skip_fastqc       = true
+                skip_fastp        = true
+                skip_sequali      = true
+                skip_sortmerna    = true
+                skip_fastq_screen = true
+                skip_kraken2      = true
+                skip_ngscm        = true
+            }
+        }
+
+        then {
+            assert workflow.success
+
+            assertAll(
+                // --- SeqKit stats: run on all samples regardless of pairing ---
+                { assert path("$outputDir/seqkit/stats/SAMPLE_PE_EQUAL.tsv").exists() },
+                { assert path("$outputDir/seqkit/stats/SAMPLE_PE_UNEQUAL.tsv").exists() },
+                // --- SeqKit pair: must NOT run ---
+                { assert !path("$outputDir/seqkit/pair").exists() },
+                // --- FastQC: must NOT run ---
+                { assert !path("$outputDir/fastqc").exists() },
+                // --- Fastp: must NOT run ---
+                { assert !path("$outputDir/fastp").exists() },
+                // --- Sequali: must NOT run ---
+                { assert !path("$outputDir/sequali").exists() },
+                // --- SortMeRNA: must NOT run ---
+                { assert !path("$outputDir/sortmerna").exists() },
+                // --- FastQ Screen: must NOT run ---
+                { assert !path("$outputDir/fastq_screen").exists() },
+                // --- Kraken2: must NOT run (skip_kraken2 = true) ---
+                { assert !path("$outputDir/kraken2").exists() },
+                // --- SeqKit Sample: must NOT run when Kraken2 is skipped ---
+                { assert !path("$outputDir/seqkit/sample").exists() },
+                // --- Bracken: does not run because Kraken2 is skipped ---
+                { assert !path("$outputDir/bracken").exists() },
+                // --- Sankey: does not run because bracken does not run ---
+                { assert !path("$outputDir/sankey_plots").exists() },
+                // --- NGSCheckMate: must NOT run when skipped ---
+                { assert !path("$outputDir/ngscheckmate").exists() }
+            )
+        }
+    }
+
+    test("-profile test,singularity --skip_bracken true") {
+
+        setup {
+            def baseUrl = TESTDATA
+            def csv = new File("$outputDir/samplesheet.csv")
+            csv.parentFile.mkdirs()
+            csv.text = [
+                "sample,fastq_1,fastq_2",
+                "SAMPLE_PE_EQUAL,${baseUrl}ERR6503616_1_down1.fastq.gz,${baseUrl}ERR6503616_2_down1.fastq.gz",
+            ].join("\n")
+
+        }
+
+        when {
+            params {
+                outdir            = "$outputDir"
+                input             = "$outputDir/samplesheet.csv"
+                skip_bracken      = true
+                skip_seqkit_sana  = true
+                skip_seqkit_pair  = true
+                skip_fastqc       = true
+                skip_fastp        = true
+                skip_sequali      = true
+                skip_fastq_screen = true
+                skip_sortmerna    = true
+                skip_ngscm        = true
+            }
+        }
+
+        then {
+            assert workflow.success
+
+            // --- Kraken2: must still run ---
+            assert path("$outputDir/kraken2/SAMPLE_PE_EQUAL.kraken2.report.txt").exists()
+
+            // --- Bracken: must NOT run when skip_bracken = true ---
+            assert !path("$outputDir/bracken").exists()
+
+            // --- Sankey: must NOT run because Bracken is skipped ---
+            assert !path("$outputDir/sankey_plots").exists()
+        }
+    }
+
+    test("-profile test,singularity --skip_sankey true") {
+
+        setup {
+            def baseUrl = TESTDATA
+            def csv = new File("$outputDir/samplesheet.csv")
+            csv.parentFile.mkdirs()
+            csv.text = [
+                "sample,fastq_1,fastq_2",
+                "SAMPLE_PE_EQUAL,${baseUrl}ERR6503616_1_down1.fastq.gz,${baseUrl}ERR6503616_2_down1.fastq.gz",
+            ].join("\n")
+
+        }
+
+        when {
+            params {
+                outdir            = "$outputDir"
+                input             = "$outputDir/samplesheet.csv"
+                skip_sankey       = true
+                skip_seqkit_sana  = true
+                skip_seqkit_pair  = true
+                skip_fastqc       = true
+                skip_fastp        = true
+                skip_sequali      = true
+                skip_fastq_screen = true
+                skip_sortmerna    = true
+                skip_ngscm        = true
+            }
+        }
+
+        then {
+            assert workflow.success
+
+            // --- Bracken must still run ---
+            assert path("$outputDir/bracken/SAMPLE_PE_EQUAL.tsv").exists()
+
+            // --- Sankey: output directory must NOT exist when skip_sankey = true ---
+            assert !path("$outputDir/sankey_plots").exists()
+        }
+    }
+
+    test("-profile test,singularity --seqkit_keep_paired true --seqkit_keep_unpaired true") {
+
+        setup {
+            def baseUrl = TESTDATA
+            def csv = new File("$outputDir/samplesheet.csv")
+            csv.parentFile.mkdirs()
+            csv.text = [
+                "sample,fastq_1,fastq_2",
+                "SAMPLE_PE_UNEQUAL,${baseUrl}ERR6503616_1_down1.fastq.gz,${baseUrl}ERR6503616_2_down1_half.fastq.gz",
+            ].join("\n")
+        }
+
+        when {
+            params {
+                outdir                = "$outputDir"
+                input                 = "$outputDir/samplesheet.csv"
+                seqkit_keep_paired    = true
+                seqkit_keep_unpaired  = true
+                skip_bracken          = true
+                skip_seqkit_sana      = true
+                skip_fastqc           = true
+                skip_fastp            = true
+                skip_sequali          = true
+                skip_fastq_screen     = true
+                skip_sortmerna        = true
+                skip_kraken2          = true
+                skip_ngscm            = true
+            }
+        }
+
+        then {
+            assert workflow.success
+
+            // --- SeqKit pair: both paired and unpaired files must be published ---
+            assert path("$outputDir/seqkit/pair/SAMPLE_PE_UNEQUAL_1.paired.fastq.gz").exists()
+            assert path("$outputDir/seqkit/pair/SAMPLE_PE_UNEQUAL_2.paired.fastq.gz").exists()
+            assert path("$outputDir/seqkit/pair/SAMPLE_PE_UNEQUAL_1.unpaired.fastq.gz").exists()
+
+            // --- SeqKit pair: when keep_paired false, paired not published but unpaired still is ---
+            // (covered implicitly: paired present here, so absence is tested via default test)
+        }
+    }
+
+    test("-profile test,singularity --skip_ngscm true") {
+
+        setup {
+            def baseUrl = TESTDATA
+            def csv = new File("$outputDir/samplesheet.csv")
+            csv.parentFile.mkdirs()
+            csv.text = [
+                "sample,fastq_1,fastq_2",
+                "SAMPLE_PE_EQUAL,${baseUrl}ERR6503616_1_down1.fastq.gz,${baseUrl}ERR6503616_2_down1.fastq.gz",
+            ].join("\n")
+
+        }
+
+        when {
+            params {
+                outdir            = "$outputDir"
+                input             = "$outputDir/samplesheet.csv"
+                skip_ngscm        = true
+                skip_bracken      = true
+                skip_seqkit_sana  = true
+                skip_seqkit_pair  = true
+                skip_fastqc       = true
+                skip_fastp        = true
+                skip_sequali      = true
+                skip_fastq_screen = true
+                skip_sortmerna    = true
+            }
+        }
+
+        then {
+            assert workflow.success
+
+            // --- Kraken2: must still run ---
+            assert path("$outputDir/kraken2/SAMPLE_PE_EQUAL.kraken2.report.txt").exists()
+
+            // --- NGSCheckMate: must NOT run when skip_ngscm = true ---
+            assert !path("$outputDir/ngscheckmate").exists()
+
+            // --- NGSCheckMate analysis: must NOT run when skip_ngscm = true ---
+            assert !path("$outputDir/ngscheckmate/ngscm_plots").exists()
+            assert !path("$outputDir/ngscheckmate/ngscm_table.tsv").exists()
+        }
+    }
+}

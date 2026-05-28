@@ -1,0 +1,115 @@
+nextflow_process {
+
+    name "Test Process FASTQSCREEN_FASTQSCREEN"
+    script "../main.nf"
+    process "FASTQSCREEN_FASTQSCREEN"
+
+    tag "modules"
+    tag "modules_local"
+    tag "fastqscreen"
+    tag "fastqscreen/fastqscreen"
+
+    setup {
+        // Untar the bacteria bowtie index for tarball-based tests
+        run("UNTAR") {
+            script "../../../nf-core/untar/main.nf"
+            process {
+                """
+                input[0] = channel.of([
+                    [id: "bacteria"],
+                    file("https://raw.githubusercontent.com/TRON-Bioinformatics/test-datasets/qcpanda/default/db/fastq_screen_db.tar.gz", checkIfExists: true)
+                ])
+                """
+            }
+        }
+    }
+
+    test("sarscov2 - tarball bowtie index") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test', single_end:true ],
+                    [file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true)]
+                ]
+                input[1] = UNTAR.out.untar.map { meta, dir ->
+                    [["Bacteria"], [dir], ["16srRNA.bacteria"], ["bowtie"]]
+                }
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    file(process.out.txt[0][1]).name,
+                    file(process.out.html[0][1]).name,
+                    process.out.findAll { key, val -> key.startsWith("versions") }
+                ).match() }
+            )
+        }
+    }
+
+    test("sarscov2 - s3 bowtie directory") {
+        // Requires anonymous S3 access (aws.client.anonymous = true in tests/nextflow.config)
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test', single_end:true ],
+                    [file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true)]
+                ]
+                input[1] = channel.of([
+                    ["PhiX"],
+                    [file("s3://ngi-igenomes/igenomes/PhiX/Illumina/RTA/Sequence/BowtieIndex/", checkIfExists: true)],
+                    ["genome"],
+                    ["bowtie"]
+                ])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    file(process.out.txt[0][1]).name,
+                    file(process.out.html[0][1]).name,
+                    process.out.findAll { key, val -> key.startsWith("versions") }
+                ).match() }
+            )
+        }
+    }
+
+    test("sarscov2 - stub") {
+
+        options "-stub"
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test', single_end:true ],
+                    [file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true)]
+                ]
+                input[1] = UNTAR.out.untar.map { meta, dir ->
+                    [["Bacteria"], [dir], ["16srRNA.bacteria"], ["bowtie"]]
+                }
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    process.out.txt.collect { meta, f -> file(f).name },
+                    process.out.html.collect { meta, f -> file(f).name },
+                    process.out.findAll { key, val -> key.startsWith("versions") }
+                ).match() }
+            )
+        }
+    }
+}

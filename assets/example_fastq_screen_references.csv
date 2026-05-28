@@ -1,0 +1,4 @@
+name,dir,basename,aligner
+Human,s3://ngi-igenomes/igenomes/Homo_sapiens/NCBI/GRCh38/Sequence/BowtieIndex/,genome,bowtie
+Mouse,s3://ngi-igenomes/igenomes/Mus_musculus/NCBI/GRCm38/Sequence/BowtieIndex/,genome,bowtie
+Bacteria,https://example.com/path/to/bacteria_bowtie_index.tar.gz,16srRNA.bacteria,bowtie

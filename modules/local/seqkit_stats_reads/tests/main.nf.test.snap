@@ -1,0 +1,37 @@
+{
+    "single_end - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "SAMPLE_SE",
+                            "single_end": true
+                        },
+                        "0\n"
+                    ]
+                ],
+                "1": [
+                    "fastqs_under_th_SAMPLE_SE.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "fastqs_under_th": [
+                    "fastqs_under_th_SAMPLE_SE.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "read_number": [
+                    [
+                        {
+                            "id": "SAMPLE_SE",
+                            "single_end": true
+                        },
+                        "0\n"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-05-02T14:49:45.839573419",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.0"
+        }
+    }
+}

@@ -1,0 +1,89 @@
+nextflow_process {
+
+    name "Test Process SEQUALI_RENAME"
+    script "../main.nf"
+    process "SEQUALI_RENAME"
+
+    tag "modules"
+    tag "sequali_rename"
+
+    // SE sample: read1 filename in JSON is replaced with sample name
+    test("SE sample - read filename replaced with sample name") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id: 'SAMPLE_SE', single_end: true ],
+                    file("https://raw.githubusercontent.com/TRON-Bioinformatics/test-datasets/qcpanda/modules/sequali_rename/se_sample.json", checkIfExists: true),
+                    [ file("https://raw.githubusercontent.com/TRON-Bioinformatics/test-datasets/qcpanda/modules/sequali_rename/read1.fastq.gz", checkIfExists: true) ]
+                ]
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert process.out.json.size() == 1
+            def content = path(process.out.json[0][1]).text
+            assert content.contains("SAMPLE_SE")
+            assert !content.contains("read1.fastq.gz")
+        }
+
+    }
+
+    // PE sample: both read filenames in JSON are replaced with sample name
+    test("PE sample - both read filenames replaced with sample name") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id: 'SAMPLE_PE', single_end: false ],
+                    file("https://raw.githubusercontent.com/TRON-Bioinformatics/test-datasets/qcpanda/modules/sequali_rename/pe_sample.json", checkIfExists: true),
+                    [
+                        file("https://raw.githubusercontent.com/TRON-Bioinformatics/test-datasets/qcpanda/modules/sequali_rename/read1.fastq.gz", checkIfExists: true),
+                        file("https://raw.githubusercontent.com/TRON-Bioinformatics/test-datasets/qcpanda/modules/sequali_rename/read2.fastq.gz", checkIfExists: true)
+                    ]
+                ]
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert process.out.json.size() == 1
+            def content = path(process.out.json[0][1]).text
+            assert content.contains("SAMPLE_PE")
+            assert !content.contains("read1.fastq.gz")
+            assert !content.contains("read2.fastq.gz")
+        }
+
+    }
+
+    // Stub: output JSON is created with correct sample name
+    test("stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id: 'SAMPLE_SE', single_end: true ],
+                    file("https://raw.githubusercontent.com/TRON-Bioinformatics/test-datasets/qcpanda/modules/sequali_rename/se_sample.json", checkIfExists: true),
+                    [ file("https://raw.githubusercontent.com/TRON-Bioinformatics/test-datasets/qcpanda/modules/sequali_rename/read1.fastq.gz", checkIfExists: true) ]
+                ]
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert process.out.json.size() == 1
+            assert process.out.json[0][1].endsWith("SAMPLE_SE.json")
+        }
+
+    }
+
+}

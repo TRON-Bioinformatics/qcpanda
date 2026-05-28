@@ -1,0 +1,58 @@
+name: Run nf-test
+
+# This workflow runs the pipeline with the minimal test dataset to check that
+# it completes without any errors.
+on:
+  pull_request:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+# Cancel if a newer run is started
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  NXF_ANSI_LOG: false
+  NFT_VER: "0.9.5"
+  NFT_WORKDIR: "~"
+  NXF_SINGULARITY_CACHEDIR: /tmp/singularity_cache
+  SINGULARITY_CACHEDIR: /tmp/singularity_cache
+
+jobs:
+  test:
+    name: "nf-test | NF ${{ matrix.NXF_VER }}"
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        NXF_VER:
+          - "26.04.0"
+          - "latest-everything"
+
+    steps:
+      - name: Check out pipeline code
+        uses: actions/checkout@v4
+
+      - name: Run nf-test
+        id: run_nf_test
+        uses: ./.github/actions/nf-test
+        continue-on-error: ${{ matrix.NXF_VER == 'latest-everything' }}
+        env:
+          NXF_VERSION: ${{ matrix.NXF_VER }}
+        with:
+          profile: test,singularity
+          nxf_version: ${{ matrix.NXF_VER }}
+
+      - name: Report test status
+        if: always()
+        run: |
+          if [[ "${{ steps.run_nf_test.outcome }}" == "failure" ]]; then
+            if [[ "${{ matrix.NXF_VER }}" != "latest-everything" ]]; then
+              echo "::error::nf-test with Nextflow ${{ matrix.NXF_VER }} failed"
+              exit 1
+            else
+              echo "::warning::nf-test with latest-everything failed but will not block the workflow. Please check if the error needs fixing."
+            fi
+          fi

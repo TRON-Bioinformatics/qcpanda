@@ -1,0 +1,6 @@
+name: generate_multiqc_config
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - python=3.9

@@ -1,0 +1,94 @@
+name: seqkit_pair
+description: match up paired-end reads from two fastq files
+keywords:
+  - seqkit
+  - pair
+  - fastq
+tools:
+  - seqkit:
+      description:
+        Cross-platform and ultrafast toolkit for FASTA/Q file manipulation,
+        written by Wei Shen.
+      homepage: https://bioinf.shenwei.me/seqkit/usage/
+      documentation: https://bioinf.shenwei.me/seqkit/usage/
+      tool_dev_url: https://github.com/shenwei356/seqkit/
+      doi: "10.1371/journal.pone.0163962"
+      licence: ["MIT"]
+      identifier: biotools:seqkit
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - reads:
+        type: file
+        description: |
+          List of input paired-end FastQ files.
+        ontologies: []
+output:
+  reads:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*_1.paired.fastq.gz":
+          type: file
+          description: Paired R1 reads, named using ext.prefix (default meta.id)
+          pattern: "*_1.paired.fastq.gz"
+          ontologies:
+            - edam: http://edamontology.org/format_3989 # GZIP format
+      - "*_2.paired.fastq.gz":
+          type: file
+          description: Paired R2 reads, named using ext.prefix (default meta.id)
+          pattern: "*_2.paired.fastq.gz"
+          ontologies:
+            - edam: http://edamontology.org/format_3989 # GZIP format
+  unpaired_reads:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*_1.unpaired.fastq.gz":
+          type: file
+          description: R1 reads without a mate (optional, only produced when -u is passed via ext.args)
+          pattern: "*_1.unpaired.fastq.gz"
+          ontologies:
+            - edam: http://edamontology.org/format_3989 # GZIP format
+      - "*_2.unpaired.fastq.gz":
+          type: file
+          description: R2 reads without a mate (optional, only produced when -u is passed via ext.args)
+          pattern: "*_2.unpaired.fastq.gz"
+          ontologies:
+            - edam: http://edamontology.org/format_3989 # GZIP format
+  versions_seqkit:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - seqkit:
+          type: string
+          description: The name of the tool
+      - seqkit version | sed 's/^.*v//':
+          type: eval
+          description: The expression to obtain the version of the tool
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - seqkit:
+          type: string
+          description: The name of the tool
+      - seqkit version | sed 's/^.*v//':
+          type: eval
+          description: The expression to obtain the version of the tool
+authors:
+  - "@sateeshperi"
+  - "@mjcipriano"
+  - "@hseabolt"
+maintainers:
+  - "@sateeshperi"
+  - "@mjcipriano"
+  - "@hseabolt"

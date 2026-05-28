@@ -1,0 +1,63 @@
+name: nf-core linting
+
+# This workflow runs nf-core lint and markdown lint tests to ensure
+# that the code meets the nf-core guidelines.
+on:
+  pull_request:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  pre-commit:
+    name: pre-commit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install pre-commit
+        run: pip install pre-commit
+
+      - name: Run pre-commit
+        run: pre-commit run --all-files
+
+  nf-core-lint:
+    name: nf-core lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out pipeline code
+        uses: actions/checkout@v4
+
+      - name: Install Nextflow
+        uses: nf-core/setup-nextflow@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install nf-core
+        run: |
+          python -m pip install --upgrade pip
+          pip install nf-core
+
+      - name: Run nf-core pipelines lint
+        env:
+          GITHUB_COMMENTS_URL: ${{ github.event.pull_request.comments_url }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_PR_COMMIT: ${{ github.event.pull_request.head.sha }}
+        run: nf-core -l lint_log.txt pipelines lint --dir ${GITHUB_WORKSPACE} --markdown lint_results.md
+
+      - name: Upload linting log file artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: linting-logs
+          path: |
+            lint_log.txt
+            lint_results.md

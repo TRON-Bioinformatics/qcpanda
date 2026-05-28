@@ -1,0 +1,66 @@
+{
+    "sarscov2 - tarball bowtie index": {
+        "content": [
+            "test_1_screen.txt",
+            "test_1_screen.html",
+            {
+                "versions_fastqscreen": [
+                    [
+                        "FASTQSCREEN_FASTQSCREEN",
+                        "fastqscreen",
+                        "0.16.0"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-05-23T18:03:26.983116678",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.0"
+        }
+    },
+    "sarscov2 - stub": {
+        "content": [
+            [
+                "test_1_screen.txt"
+            ],
+            [
+                "test_1_screen.html"
+            ],
+            {
+                "versions_fastqscreen": [
+                    [
+                        "FASTQSCREEN_FASTQSCREEN",
+                        "fastqscreen",
+                        "0.16.0"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-05-23T18:05:15.258728264",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.0"
+        }
+    },
+    "sarscov2 - s3 bowtie directory": {
+        "content": [
+            "test_1_screen.txt",
+            "test_1_screen.html",
+            {
+                "versions_fastqscreen": [
+                    [
+                        "FASTQSCREEN_FASTQSCREEN",
+                        "fastqscreen",
+                        "0.16.0"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-05-23T18:04:05.01860509",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.0"
+        }
+    }
+}

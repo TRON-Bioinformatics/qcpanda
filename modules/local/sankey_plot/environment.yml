@@ -1,0 +1,10 @@
+name: sankey_plot
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - r-base=4.3.1
+  - r-highcharter=0.9.4
+  - r-htmlwidgets=1.6.2
+  - r-tidyverse=2.0.0

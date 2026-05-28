@@ -1,0 +1,87 @@
+nextflow_process {
+
+    name "Test Process BRACKEN_READ_LENGTH"
+    script "../main.nf"
+    process "BRACKEN_READ_LENGTH"
+
+    tag "modules"
+    tag "bracken_read_length"
+
+    setup {
+        run("UNTAR") {
+            script "modules/nf-core/untar/main.nf"
+            process {
+                """
+                input[0] = [
+                    [ id:'db' ],
+                    file("https://raw.githubusercontent.com/TRON-Bioinformatics/test-datasets/qcpanda/modules/bracken_read_length/bracken_read_length_db.tar.gz", checkIfExists: true)
+                ]
+                """
+            }
+        }
+    }
+
+    // Stub: verifies the process scaffolding works and stub emits the placeholder kmer length
+    test("stub") {
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test', single_end:true ],
+                    file("https://raw.githubusercontent.com/TRON-Bioinformatics/test-datasets/qcpanda/modules/bracken_read_length/reads_len10.fastq", checkIfExists: true)
+                ]
+                input[1] = UNTAR.out.untar.map { meta, dir -> dir }
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert process.out.read_length[0][1].trim() == "100"
+        }
+    }
+
+    // Two reads of length 10; DB has 10-mer and 20-mer distributions → closest = 10
+    test("reads length 10 - kmer 10") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test_len10', single_end:true ],
+                    file("https://raw.githubusercontent.com/TRON-Bioinformatics/test-datasets/qcpanda/modules/bracken_read_length/reads_len10.fastq", checkIfExists: true)
+                ]
+                input[1] = UNTAR.out.untar.map { meta, dir -> dir }
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert process.out.read_length[0][1].trim() == "10"
+        }
+    }
+
+    // Two reads of length 20; DB has 10-mer and 20-mer distributions → closest = 20
+    test("reads length 20 - kmer 20") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test_len20', single_end:true ],
+                    file("https://raw.githubusercontent.com/TRON-Bioinformatics/test-datasets/qcpanda/modules/bracken_read_length/reads_len20.fastq", checkIfExists: true)
+                ]
+                input[1] = UNTAR.out.untar.map { meta, dir -> dir }
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert process.out.read_length[0][1].trim() == "20"
+        }
+    }
+}

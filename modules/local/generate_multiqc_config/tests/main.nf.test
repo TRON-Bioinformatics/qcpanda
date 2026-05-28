@@ -1,0 +1,173 @@
+nextflow_process {
+
+    name "Test Process GENERATE_MULTIQC_CONFIG"
+    script "../main.nf"
+    process "GENERATE_MULTIQC_CONFIG"
+
+    tag "modules"
+    tag "generate_multiqc_config"
+
+    setup {
+        run("UNTAR") {
+            script "modules/nf-core/untar/main.nf"
+            process {
+                """
+                input[0] = [
+                    [ id:'ngscm_plots' ],
+                    file("https://raw.githubusercontent.com/TRON-Bioinformatics/test-datasets/qcpanda/modules/generate_multiqc_config/ngscm_plots.tar.gz", checkIfExists: true)
+                ]
+                """
+            }
+        }
+    }
+
+    test("no inputs produce config with default content only") {
+
+        when {
+            process {
+                """
+                input[0] = []
+                input[1] = []
+                input[2] = []
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert process.out.config.size() == 1
+            def config = path(process.out.config[0]).text
+            assert config.contains("use_filename_as_sample_name")
+            assert config.contains("report_section_order")
+            assert !config.contains("custom_data")
+        }
+
+    }
+
+    test("sankey htmls produce sankey section in config") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    file("https://raw.githubusercontent.com/TRON-Bioinformatics/test-datasets/qcpanda/modules/generate_multiqc_config/SAMPLE_A_sankey_plot.html", checkIfExists: true)
+                    ]
+                input[1] = []
+                input[2] = []
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert process.out.config.size() == 1
+            def config = path(process.out.config[0]).text
+            assert config.contains("custom_data")
+            assert config.contains("sankey_plots")
+            assert config.contains("Bracken - Sankey Plots")
+            assert config.contains("mqc-sankey-viewer")
+            assert config.contains("SAMPLE_A")
+        }
+
+    }
+
+    test("ngscm plots dir produces ngscm section in config") {
+
+        when {
+            process {
+                """
+                input[0] = []
+                input[1] = UNTAR.out.untar.map { meta, dir -> dir }
+                input[2] = []
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert process.out.config.size() == 1
+            def config = path(process.out.config[0]).text
+            assert config.contains("custom_data")
+            assert config.contains("ngscm_section")
+            assert config.contains("NGS Checkmate")
+            // TSV converted to HTML table
+            assert config.contains("mqc-ngscm-dt")
+            // PNG converted to base64 img
+            assert config.contains("data:image/png;base64")
+        }
+
+    }
+
+    test("bracken tsvs produce bracken bargraph section in config") {
+
+        when {
+            process {
+                """
+                input[0] = []
+                input[1] = []
+                input[2] = [
+                    file("https://raw.githubusercontent.com/TRON-Bioinformatics/test-datasets/qcpanda/modules/generate_multiqc_config/SAMPLE_A.tsv", checkIfExists: true)
+                    ]
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert process.out.config.size() == 1
+            def config = path(process.out.config[0]).text
+            assert config.contains("custom_data")
+            assert config.contains("bracken_abundance")
+            assert config.contains("Bracken Abundance Estimates")
+            assert config.contains("bargraph")
+            assert config.contains("SAMPLE_A")
+            assert config.contains("Escherichia coli")
+        }
+
+    }
+
+    test("sankey and ngscm both produce both sections") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    file("https://raw.githubusercontent.com/TRON-Bioinformatics/test-datasets/qcpanda/modules/generate_multiqc_config/SAMPLE_A_sankey_plot.html", checkIfExists: true)
+                    ]
+                input[1] = UNTAR.out.untar.map { meta, dir -> dir }
+                input[2] = []
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert process.out.config.size() == 1
+            def config = path(process.out.config[0]).text
+            assert config.contains("sankey_plots")
+            assert config.contains("ngscm_section")
+        }
+
+    }
+
+    test("stub") {
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = []
+                input[1] = []
+                input[2] = []
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert process.out.config[0].toString().endsWith("multiqc_config.yaml")
+        }
+
+    }
+
+}

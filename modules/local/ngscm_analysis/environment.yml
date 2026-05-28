@@ -1,0 +1,8 @@
+name: ngscm_analysis
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - r-base=4.4.2
+  - r-tidyverse=2.0.0
+  - r-fs=1.6.5

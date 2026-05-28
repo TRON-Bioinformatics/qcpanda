@@ -1,0 +1,36 @@
+repository_type: pipeline
+nf_core_version: 4.0.1
+lint:
+  actions_nf_test: false
+  nextflow_config:
+    - manifest.name
+    - manifest.homePage
+    - params.pipelines_testdata_base_path
+  nf_test_content: false
+  multiqc_config: false
+  container_configs: false
+  files_unchanged:
+    - .github/ISSUE_TEMPLATE/bug_report.yml
+    - .github/PULL_REQUEST_TEMPLATE.md
+    - .github/workflows/linting.yml
+    - .gitignore
+  files_exist:
+    - .gitattributes
+    - .prettierignore
+    - .prettierrc.yml
+    - CODE_OF_CONDUCT.md
+    - .github/.dockstore.yml
+    - .github/ISSUE_TEMPLATE/config.yml
+    - .github/workflows/branch.yml
+    - .github/workflows/linting_comment.yml
+    - assets/email_template.html
+    - assets/email_template.txt
+    - assets/sendmail_template.txt
+    - assets/nf-core-qcpanda_logo_light.png
+    - docs/images/nf-core-qcpanda_logo_light.png
+    - docs/images/nf-core-qcpanda_logo_dark.png
+    - .github/actions/get-shards/action.yml
+    - conf/igenomes.config
+    - conf/igenomes_ignored.config
+    - .github/workflows/awstest.yml
+    - .github/workflows/awsfulltest.yml

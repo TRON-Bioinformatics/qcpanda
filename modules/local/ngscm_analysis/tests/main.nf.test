@@ -1,0 +1,124 @@
+nextflow_process {
+
+    name "Test Process NGSCM_ANALYSIS"
+    script "../main.nf"
+    process "NGSCM_ANALYSIS"
+
+    tag "modules"
+    tag "ngscm_analysis"
+
+    // Two samples (SAMPLE_A, SAMPLE_B) with VAF files and a pairwise all-comparisons file.
+    // SAMPLE_A is matched with SAMPLE_B; Undetermined row must be filtered by read_ngscm_pairs.
+    test("two samples produce plots dir and table") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id: 'snp_pt' ],
+                    file("https://raw.githubusercontent.com/TRON-Bioinformatics/test-datasets/qcpanda/modules/ngscm_analysis/test_ngscm_all.txt", checkIfExists: true),
+                    [
+                        file("https://raw.githubusercontent.com/TRON-Bioinformatics/test-datasets/qcpanda/modules/ngscm_analysis/SAMPLE_A.vaf", checkIfExists: true),
+                        file("https://raw.githubusercontent.com/TRON-Bioinformatics/test-datasets/qcpanda/modules/ngscm_analysis/SAMPLE_B.vaf", checkIfExists: true)
+                    ]
+                ]
+                input[1] = []
+                """
+            }
+        }
+
+        then {
+            assert process.success
+
+            // ngscm_plots directory is produced
+            assert process.out.plots.size() == 1
+            def plots_dir = process.out.plots[0][1].toString()
+            // pairwise correlation table is always written
+            assert path("${plots_dir}/01_ngscheck_pairs.tsv").exists()
+            // distribution plot is always written
+            assert path("${plots_dir}/04_distribution.png").exists()
+            // homozygosity table and plot are always written
+            assert path("${plots_dir}/05_homozygosity.tsv").exists()
+            assert path("${plots_dir}/06_homozygosity.png").exists()
+
+            // ngscm_table.tsv is produced with one row per sample
+            assert process.out.table.size() == 1
+            def table = path(process.out.table[0][1])
+            assert table.exists()
+            def lines = table.readLines()
+            assert lines.size() == 3  // header + 2 samples
+        }
+
+    }
+
+    test("three samples with patient map produce patient-grouped plots") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id: 'snp_pt' ],
+                    file("https://raw.githubusercontent.com/TRON-Bioinformatics/test-datasets/qcpanda/modules/ngscm_analysis/test_ngscm_all.txt", checkIfExists: true),
+                    [
+                        file("https://raw.githubusercontent.com/TRON-Bioinformatics/test-datasets/qcpanda/modules/ngscm_analysis/SAMPLE_A.vaf", checkIfExists: true),
+                        file("https://raw.githubusercontent.com/TRON-Bioinformatics/test-datasets/qcpanda/modules/ngscm_analysis/SAMPLE_B.vaf", checkIfExists: true),
+                        file("https://raw.githubusercontent.com/TRON-Bioinformatics/test-datasets/qcpanda/modules/ngscm_analysis/SAMPLE_C.vaf", checkIfExists: true)
+                    ]
+                ]
+                input[1] = file("https://raw.githubusercontent.com/TRON-Bioinformatics/test-datasets/qcpanda/modules/ngscm_analysis/patient_map.tsv", checkIfExists: true)
+                """
+            }
+        }
+
+        then {
+            assert process.success
+
+            // plots directory is produced and contains the standard outputs
+            def plots_dir = process.out.plots[0][1].toString()
+            assert path("${plots_dir}/01_ngscheck_pairs.tsv").exists()
+            assert path("${plots_dir}/04_distribution.png").exists()
+            assert path("${plots_dir}/05_homozygosity.tsv").exists()
+            assert path("${plots_dir}/06_homozygosity.png").exists()
+
+            // pairwise table has patient_match column (patient map was applied)
+            def pairs_lines = path("${plots_dir}/01_ngscheck_pairs.tsv").readLines()
+            assert pairs_lines[0].contains("patient_match")
+
+            // ngscm_table has one row per sample (header + 3 samples)
+            assert process.out.table.size() == 1
+            def table_lines = path(process.out.table[0][1]).readLines()
+            assert table_lines.size() == 4  // header + 3 samples
+        }
+
+    }
+
+    test("stub") {
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id: 'snp_pt' ],
+                    file("https://raw.githubusercontent.com/TRON-Bioinformatics/test-datasets/qcpanda/modules/ngscm_analysis/test_ngscm_all.txt", checkIfExists: true),
+                    [
+                        file("https://raw.githubusercontent.com/TRON-Bioinformatics/test-datasets/qcpanda/modules/ngscm_analysis/SAMPLE_A.vaf", checkIfExists: true),
+                        file("https://raw.githubusercontent.com/TRON-Bioinformatics/test-datasets/qcpanda/modules/ngscm_analysis/SAMPLE_B.vaf", checkIfExists: true)
+                    ]
+                ]
+                input[1] = []
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert process.out.plots.size() == 1
+            assert process.out.plots[0][1].toString().endsWith("ngscm_plots")
+            assert process.out.table.size() == 1
+            assert process.out.table[0][1].toString().endsWith("ngscm_table.tsv")
+        }
+
+    }
+
+}

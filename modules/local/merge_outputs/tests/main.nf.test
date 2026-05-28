@@ -1,0 +1,81 @@
+nextflow_process {
+
+    name "Test Process MERGE_OUTPUTS"
+    script "../main.nf"
+    process "MERGE_OUTPUTS"
+
+    tag "modules"
+    tag "merge_outputs"
+
+    // Two files are concatenated, sorted, and written to the named output file
+    test("two files - merged and sorted") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    file("https://raw.githubusercontent.com/TRON-Bioinformatics/test-datasets/qcpanda/modules/merge_outputs/file1.txt", checkIfExists: true),
+                    file("https://raw.githubusercontent.com/TRON-Bioinformatics/test-datasets/qcpanda/modules/merge_outputs/file2.txt", checkIfExists: true)
+                ]
+                input[1] = "merged.txt"
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert process.out.merged.size() == 1
+            def lines = path(process.out.merged[0]).readLines()
+            assert lines == ["sample_a", "sample_b", "sample_c", "sample_d"]
+        }
+
+    }
+
+    // A single file is passed — output should equal its sorted content
+    test("single file - pass-through sorted") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    file("https://raw.githubusercontent.com/TRON-Bioinformatics/test-datasets/qcpanda/modules/merge_outputs/file1.txt", checkIfExists: true)
+                ]
+                input[1] = "single.txt"
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert process.out.merged.size() == 1
+            def lines = path(process.out.merged[0]).readLines()
+            assert lines == ["sample_a", "sample_b"]
+        }
+
+    }
+
+    // Stub: output file is created with the correct name
+    test("stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = [
+                    file("https://raw.githubusercontent.com/TRON-Bioinformatics/test-datasets/qcpanda/modules/merge_outputs/file1.txt", checkIfExists: true)
+                ]
+                input[1] = "stub_out.txt"
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert process.out.merged.size() == 1
+            assert process.out.merged[0].endsWith("stub_out.txt")
+        }
+
+    }
+
+}

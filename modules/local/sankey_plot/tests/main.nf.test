@@ -1,0 +1,62 @@
+nextflow_process {
+
+    name "Test Process SANKEY_PLOT"
+    script "../main.nf"
+    process "SANKEY_PLOT"
+
+    tag "modules"
+    tag "sankey_plot"
+
+    // 5 reads all assigned to Homo sapiens (100%) — full D→S hierarchy present
+    // Input is the Bracken Kraken2-style report (BRACKEN_BRACKEN.out.txt)
+    // Expected: HTML file is produced and contains Highcharts sankey markup
+    test("single species with full taxonomy") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id: 'test_sample' ],
+                    file("https://raw.githubusercontent.com/TRON-Bioinformatics/test-datasets/qcpanda/modules/sankey_plot/test_sample.kraken2.report_bracken.txt", checkIfExists: true)
+                ]
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert process.out.html.size() == 1
+            def html = path(process.out.html[0][1])
+            assert html.exists()
+            assert html.size() > 0
+            // selfcontained HTML produced by saveWidget always contains Highcharts JS
+            assert html.text.toLowerCase().contains("highchart")
+        }
+
+    }
+
+    test("stub") {
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id: 'stub_sample' ],
+                    file("https://raw.githubusercontent.com/TRON-Bioinformatics/test-datasets/qcpanda/modules/sankey_plot/test_sample.kraken2.report_bracken.txt", checkIfExists: true)
+                ]
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert process.out.html.size() == 1
+            def html = path(process.out.html[0][1])
+            assert html.exists()
+            assert html.fileName.toString() == "stub_sample_sankey_plot.html"
+        }
+
+    }
+
+}

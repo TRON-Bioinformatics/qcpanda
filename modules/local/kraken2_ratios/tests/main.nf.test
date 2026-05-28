@@ -1,0 +1,56 @@
+nextflow_process {
+
+    name "Test Process KRAKEN2_RATIOS"
+    script "../main.nf"
+    process "KRAKEN2_RATIOS"
+
+    tag "modules"
+    tag "kraken2_ratios"
+
+    // 4 reads: 2 Homo sapiens (classified), 1 unclassified, 1 Escherichia coli
+    // Expected: unclassified ratio = 1/4 = 0.25; Homo sapiens ratio = 2/4 = 0.5
+    test("human reads with unclassified") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test_sample' ],
+                    file("https://raw.githubusercontent.com/TRON-Bioinformatics/test-datasets/qcpanda/modules/kraken2_ratios/kraken2_report.txt", checkIfExists: true)
+                ]
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            def lines = process.out.ratios[0][1].trim().split('\n')
+            assert lines.size() == 2
+            assert lines[0] == "0.25"   // unclassified ratio
+            assert lines[1] == "0.5"    // Homo sapiens ratio
+        }
+    }
+
+    test("stub") {
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'stub_sample' ],
+                    file("https://raw.githubusercontent.com/TRON-Bioinformatics/test-datasets/qcpanda/modules/kraken2_ratios/kraken2_report.txt", checkIfExists: true)
+                ]
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            def lines = process.out.ratios[0][1].trim().split('\n')
+            assert lines.size() == 2
+            assert lines[0] == "0"
+            assert lines[1] == "0"
+        }
+    }
+}

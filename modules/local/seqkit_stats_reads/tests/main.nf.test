@@ -1,0 +1,153 @@
+nextflow_process {
+
+    name "Test Process SEQKIT_STATS_READS"
+    script "../main.nf"
+    process "SEQKIT_STATS_READS"
+
+    tag "modules"
+    tag "seqkit_stats_reads"
+
+    // paired-end, equal read counts: expect 2 read counts (10000 each), no under-threshold file
+    test("paired_end_equal") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'SAMPLE_PE_EQUAL', single_end:false ],
+                    file("https://raw.githubusercontent.com/TRON-Bioinformatics/test-datasets/qcpanda/modules/seqkit_stats_reads/pe_equal.tsv", checkIfExists: true)
+                ]
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            def read_number = process.out.read_number[0][1].trim().split('\n')*.toLong()
+            assert read_number.size() == 2
+            assert read_number[0] == 10000
+            assert read_number[1] == 10000
+            assert process.out.fastqs_under_th == []
+        }
+
+    }
+
+    // paired-end, unequal read counts: R1=10000, R2=5000, no under-threshold (both above default min of 1)
+    test("paired_end_unequal") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'SAMPLE_PE_UNEQUAL', single_end:false ],
+                    file("https://raw.githubusercontent.com/TRON-Bioinformatics/test-datasets/qcpanda/modules/seqkit_stats_reads/pe_unequal.tsv", checkIfExists: true)
+                ]
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            def read_number = process.out.read_number[0][1].trim().split('\n')*.toLong()
+            assert read_number.size() == 2
+            assert read_number[0] == 10000
+            assert read_number[1] == 5000
+            assert process.out.fastqs_under_th == []
+        }
+
+    }
+
+    // single-end: expect 1 read count (10000), no under-threshold file
+    test("single_end") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'SAMPLE_SE', single_end:true ],
+                    file("https://raw.githubusercontent.com/TRON-Bioinformatics/test-datasets/qcpanda/modules/seqkit_stats_reads/se.tsv", checkIfExists: true)
+                ]
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            def read_number = process.out.read_number[0][1].trim().split('\n')*.toLong()
+            assert read_number.size() == 1
+            assert read_number[0] == 10000
+            assert process.out.fastqs_under_th == []
+        }
+
+    }
+
+    // paired-end empty FASTQs: expect read counts of 0, under-threshold file must be produced
+    test("paired_end_empty") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'SAMPLE_PE_EMPTY', single_end:false ],
+                    file("https://raw.githubusercontent.com/TRON-Bioinformatics/test-datasets/qcpanda/modules/seqkit_stats_reads/pe_empty.tsv", checkIfExists: true)
+                ]
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            def read_number = process.out.read_number[0][1].trim().split('\n')*.toLong()
+            assert read_number == [0]
+            assert process.out.fastqs_under_th.size() == 1
+        }
+
+    }
+
+    // single-end empty FASTQ: expect read count of 0, under-threshold file must be produced
+    test("single_end_empty") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'SAMPLE_SE_EMPTY', single_end:true ],
+                    file("https://raw.githubusercontent.com/TRON-Bioinformatics/test-datasets/qcpanda/modules/seqkit_stats_reads/se_empty.tsv", checkIfExists: true)
+                ]
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            def read_number = process.out.read_number[0][1].trim().split('\n')*.toLong()
+            assert read_number == [0]
+            assert process.out.fastqs_under_th.size() == 1
+        }
+
+    }
+
+    // stub run
+    test("single_end - stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'SAMPLE_SE', single_end:true ],
+                    file("https://raw.githubusercontent.com/TRON-Bioinformatics/test-datasets/qcpanda/modules/seqkit_stats_reads/se.tsv", checkIfExists: true)
+                ]
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out).match()
+        }
+
+    }
+
+}
