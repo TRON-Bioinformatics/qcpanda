@@ -1,5 +1,5 @@
 //
-// Subworkflow with functionality specific to the TRON/qcpanda pipeline
+// Subworkflow with functionality specific to the TRON-Bioinformatics/qcpanda pipeline
 //
 
 /*

@@ -1,5 +1,5 @@
 name: Feature request
-description: Suggest an idea for the TRON/qcpanda pipeline
+description: Suggest an idea for the TRON-Bioinformatics/qcpanda pipeline
 labels: enhancement
 body:
   - type: textarea

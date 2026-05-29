@@ -25,5 +25,19 @@ jobs:
             cran::testthat
             cran::tidyverse
 
+      - name: Check out unit test data
+        uses: actions/checkout@v4
+        with:
+          repository: TRON-Bioinformatics/test-datasets
+          ref: qcpanda
+          path: _testdata
+          sparse-checkout: |
+            unittest_data
+
+      - name: Copy unit test data
+        run: |
+          mkdir -p bin/tests/data
+          cp -r _testdata/unittest_data/. bin/tests/data/
+
       - name: Run R unit tests
         run: Rscript bin/tests/test_custom_functions.R

@@ -1,6 +1,6 @@
 {
-  "name": "TRON/qcpanda",
-  "homePage": "https://github.com/TRON/qcpanda",
+  "name": "TRON-Bioinformatics/qcpanda",
+  "homePage": "https://github.com/TRON-Bioinformatics/qcpanda",
   "repos": {
     "https://github.com/nf-core/modules.git": {
       "modules": {

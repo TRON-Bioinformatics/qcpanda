@@ -46,9 +46,9 @@ has_patient_map <- nchar(opts$patient_map) > 0
 # -- pairwise correlation data -------------------------------------------------
 ngscheck_pairs <- read_ngscm_pairs(opts$ngscm_all_file)
 
-# Optionally join patient-to-sample mapping (TSV with 'patient' and 'sample' columns)
+# Optionally join patient-to-sample mapping (CSV with 'patient' and 'sample' columns)
 if (has_patient_map) {
-  patient_df <- read_tsv(opts$patient_map,
+  patient_df <- read_csv(opts$patient_map,
                          col_types = cols(patient = col_character(), sample = col_character()))
   ngscheck_pairs <- ngscheck_pairs %>%
     left_join(patient_df %>% select(sample_label_1 = sample, patient_1 = patient),

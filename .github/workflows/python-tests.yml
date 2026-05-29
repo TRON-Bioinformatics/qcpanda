@@ -23,5 +23,19 @@ jobs:
           python -m pip install --upgrade pip
           pip install pytest biopython==1.84
 
+      - name: Check out unit test data
+        uses: actions/checkout@v4
+        with:
+          repository: TRON-Bioinformatics/test-datasets
+          ref: qcpanda
+          path: _testdata
+          sparse-checkout: |
+            unittest_data
+
+      - name: Copy unit test data
+        run: |
+          mkdir -p bin/tests/data
+          cp -r _testdata/unittest_data/. bin/tests/data/
+
       - name: Run pytest
         run: pytest bin/tests/ -v

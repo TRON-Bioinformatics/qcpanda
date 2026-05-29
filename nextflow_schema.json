@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://raw.githubusercontent.com/TRON/qcpanda/master/nextflow_schema.json",
-  "title": "TRON/qcpanda pipeline parameters",
+  "$id": "https://raw.githubusercontent.com/TRON-Bioinformatics/qcpanda/master/nextflow_schema.json",
+  "title": "TRON-Bioinformatics/qcpanda pipeline parameters",
   "description": "qcpanda is a Nextflow (DSL2) pipeline for comprehensive quality control of sequencing data. It takes a tab-separated input table of FASTQ files (single-end or paired-end) and runs a battery of QC tools \u2014 including SeqKit, FastQC, Sequali, fastp, SortMeRNA, FastQ Screen, Kraken2/Bracken, and NGSCheckMate \u2014 to assess read quality, detect contamination, identify organisms, and check for sample swaps. All results are aggregated into a unified interactive MultiQC report.",
   "type": "object",
   "$defs": {
@@ -28,7 +28,7 @@
           "default": 1,
           "description": "Minimum number of reads required per FASTQ file. Samples where any file falls below this threshold are excluded from analysis.",
           "fa_icon": "fas fa-filter",
-          "minimum": 1
+          "minimum": 0
         },
         "outdir": {
           "type": "string",
@@ -187,7 +187,7 @@
         },
         "ngscm_patient_map": {
           "type": "string",
-          "description": "Optional TSV file with 'patient' and 'sample' columns that groups samples by patient. When provided, NGSCheckMate analysis plots (heatmap, distribution, homozygosity) are faceted/coloured by patient.",
+          "description": "Optional CSV file with 'patient' and 'sample' columns that groups samples by patient. When provided, NGSCheckMate analysis plots (heatmap, distribution, homozygosity) are faceted/coloured by patient.",
           "fa_icon": "fas fa-file-alt"
         },
         "execute_ngscm_threshold": {

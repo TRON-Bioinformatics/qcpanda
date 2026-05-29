@@ -1,0 +1,56 @@
+{
+    "Params: --skip_seqkit_sana false": {
+        "content": [
+            9,
+            {
+                "SEQKIT_SANA": {
+                    "seqkit": "2.10.1"
+                },
+                "SEQKIT_STATS": {
+                    "seqkit": "2.9.0"
+                }
+            },
+            [
+                "multiqc",
+                "multiqc/multiqc_config.yaml",
+                "multiqc/multiqc_data",
+                "multiqc/multiqc_data/llms-full.txt",
+                "multiqc/multiqc_data/multiqc.log",
+                "multiqc/multiqc_data/multiqc.parquet",
+                "multiqc/multiqc_data/multiqc_citations.txt",
+                "multiqc/multiqc_data/multiqc_data.json",
+                "multiqc/multiqc_data/multiqc_software_versions.txt",
+                "multiqc/multiqc_data/multiqc_sources.txt",
+                "multiqc/multiqc_report.html",
+                "pipeline_info",
+                "pipeline_info/qcpanda_software_mqc_versions.yml",
+                "seqkit",
+                "seqkit/sana",
+                "seqkit/sana/SAMPLE_PE_EQUAL_1.fastq.gz",
+                "seqkit/sana/SAMPLE_PE_EQUAL_1.log",
+                "seqkit/sana/SAMPLE_PE_EQUAL_2.fastq.gz",
+                "seqkit/sana/SAMPLE_PE_EQUAL_2.log",
+                "seqkit/sana/SAMPLE_SE_1.fastq.gz",
+                "seqkit/sana/SAMPLE_SE_1.log",
+                "seqkit/stats",
+                "seqkit/stats/SAMPLE_PE_EQUAL.tsv",
+                "seqkit/stats/SAMPLE_SE.tsv"
+            ],
+            [
+                "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f",
+                "SAMPLE_PE_EQUAL_1.fastq.gz:md5,a42f94eeb36d443f169f274e2f0ae161",
+                "SAMPLE_PE_EQUAL_1.log:md5,449ada13f517be6b88b56ed62d7233b2",
+                "SAMPLE_PE_EQUAL_2.fastq.gz:md5,55395b2745aa27534abe4f6c53c1722c",
+                "SAMPLE_PE_EQUAL_2.log:md5,e3d91ef90ee8cf238a5441b68cf248c4",
+                "SAMPLE_SE_1.fastq.gz:md5,a42f94eeb36d443f169f274e2f0ae161",
+                "SAMPLE_SE_1.log:md5,449ada13f517be6b88b56ed62d7233b2",
+                "SAMPLE_SE.tsv:md5,b65afddf5481c2708b884007dc28bdf4"
+            ]
+        ],
+        "timestamp": "2026-05-27T12:52:38.107743583",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.0"
+        }
+    }
+}

@@ -1,6 +1,7 @@
 {
-    "-profile test,singularity": {
+    "Params: default - stub": {
         "content": [
+            80,
             {
                 "BRACKEN_BRACKEN": {
                     "bracken": "3.0.1"
@@ -17,8 +18,262 @@
                 "FASTQSCREEN": {
                     "fastqscreen": "0.16.0"
                 },
-                "GUNZIP_RRNA_FASTAS": {
-                    "gunzip": 1.13
+                "KRAKEN2_KRAKEN2": {
+                    "kraken2": "2.1.6",
+                    "pigz": 2.8
+                },
+                "KRAKEN2_RATIOS": {
+                    "gawk": "5.3.0, API 4.0, PMA Avon 8-g1, (GNU MPFR 4.2.1, GNU MP 6.3.0)"
+                },
+                "NGSCHECKMATE_FASTQ": {
+                    "ngscheckmate": "1.0.1"
+                },
+                "NGSCHECKMATE_VAFNCM": {
+                    "ngscheckmate": "1.0.1"
+                },
+                "SANKEY_PLOT": {
+                    "r-highcharter": "0.9.4"
+                },
+                "SEQKIT_SAMPLE": {
+                    "seqkit": "2.13.0"
+                },
+                "SEQKIT_STATS": {
+                    "seqkit": "2.9.0"
+                },
+                "SEQUALI": {
+                    "sequali": "1.0.2"
+                },
+                "UNTAR_FASTQSCREEN_DB": {
+                    "untar": 1.34
+                },
+                "UNTAR_KRAKEN2_DB": {
+                    "untar": 1.34
+                }
+            },
+            [
+                "bracken",
+                "bracken/SAMPLE_PE_EMPTY.kraken2.report_bracken.txt",
+                "bracken/SAMPLE_PE_EMPTY.tsv",
+                "bracken/SAMPLE_PE_EQUAL.kraken2.report_bracken.txt",
+                "bracken/SAMPLE_PE_EQUAL.tsv",
+                "bracken/SAMPLE_PE_UNEQUAL.kraken2.report_bracken.txt",
+                "bracken/SAMPLE_PE_UNEQUAL.tsv",
+                "bracken/SAMPLE_SE.kraken2.report_bracken.txt",
+                "bracken/SAMPLE_SE.tsv",
+                "bracken/SAMPLE_SE_EMPTY.kraken2.report_bracken.txt",
+                "bracken/SAMPLE_SE_EMPTY.tsv",
+                "fastp",
+                "fastp/SAMPLE_PE_EMPTY.fastp.html",
+                "fastp/SAMPLE_PE_EMPTY.fastp.json",
+                "fastp/SAMPLE_PE_EMPTY.fastp.log",
+                "fastp/SAMPLE_PE_EMPTY_R1.fastp.fastq.gz",
+                "fastp/SAMPLE_PE_EMPTY_R2.fastp.fastq.gz",
+                "fastp/SAMPLE_PE_EQUAL.fastp.html",
+                "fastp/SAMPLE_PE_EQUAL.fastp.json",
+                "fastp/SAMPLE_PE_EQUAL.fastp.log",
+                "fastp/SAMPLE_PE_EQUAL_R1.fastp.fastq.gz",
+                "fastp/SAMPLE_PE_EQUAL_R2.fastp.fastq.gz",
+                "fastp/SAMPLE_PE_UNEQUAL.fastp.html",
+                "fastp/SAMPLE_PE_UNEQUAL.fastp.json",
+                "fastp/SAMPLE_PE_UNEQUAL.fastp.log",
+                "fastp/SAMPLE_PE_UNEQUAL_R1.fastp.fastq.gz",
+                "fastp/SAMPLE_PE_UNEQUAL_R2.fastp.fastq.gz",
+                "fastp/SAMPLE_SE.fastp.fastq.gz",
+                "fastp/SAMPLE_SE.fastp.html",
+                "fastp/SAMPLE_SE.fastp.json",
+                "fastp/SAMPLE_SE.fastp.log",
+                "fastp/SAMPLE_SE_EMPTY.fastp.fastq.gz",
+                "fastp/SAMPLE_SE_EMPTY.fastp.html",
+                "fastp/SAMPLE_SE_EMPTY.fastp.json",
+                "fastp/SAMPLE_SE_EMPTY.fastp.log",
+                "fastq_screen",
+                "fastq_screen/SAMPLE_PE_EMPTY_1_screen.html",
+                "fastq_screen/SAMPLE_PE_EMPTY_1_screen.png",
+                "fastq_screen/SAMPLE_PE_EMPTY_1_screen.txt",
+                "fastq_screen/SAMPLE_PE_EMPTY_2_screen.html",
+                "fastq_screen/SAMPLE_PE_EMPTY_2_screen.png",
+                "fastq_screen/SAMPLE_PE_EMPTY_2_screen.txt",
+                "fastq_screen/SAMPLE_PE_EQUAL_1_screen.html",
+                "fastq_screen/SAMPLE_PE_EQUAL_1_screen.png",
+                "fastq_screen/SAMPLE_PE_EQUAL_1_screen.txt",
+                "fastq_screen/SAMPLE_PE_EQUAL_2_screen.html",
+                "fastq_screen/SAMPLE_PE_EQUAL_2_screen.png",
+                "fastq_screen/SAMPLE_PE_EQUAL_2_screen.txt",
+                "fastq_screen/SAMPLE_PE_UNEQUAL_1_screen.html",
+                "fastq_screen/SAMPLE_PE_UNEQUAL_1_screen.png",
+                "fastq_screen/SAMPLE_PE_UNEQUAL_1_screen.txt",
+                "fastq_screen/SAMPLE_PE_UNEQUAL_2_screen.html",
+                "fastq_screen/SAMPLE_PE_UNEQUAL_2_screen.png",
+                "fastq_screen/SAMPLE_PE_UNEQUAL_2_screen.txt",
+                "fastq_screen/SAMPLE_SE_1_screen.html",
+                "fastq_screen/SAMPLE_SE_1_screen.png",
+                "fastq_screen/SAMPLE_SE_1_screen.txt",
+                "fastq_screen/SAMPLE_SE_EMPTY_1_screen.html",
+                "fastq_screen/SAMPLE_SE_EMPTY_1_screen.png",
+                "fastq_screen/SAMPLE_SE_EMPTY_1_screen.txt",
+                "fastqc",
+                "fastqc/SAMPLE_PE_EMPTY.html",
+                "fastqc/SAMPLE_PE_EMPTY.zip",
+                "fastqc/SAMPLE_PE_EQUAL.html",
+                "fastqc/SAMPLE_PE_EQUAL.zip",
+                "fastqc/SAMPLE_PE_UNEQUAL.html",
+                "fastqc/SAMPLE_PE_UNEQUAL.zip",
+                "fastqc/SAMPLE_SE.html",
+                "fastqc/SAMPLE_SE.zip",
+                "fastqc/SAMPLE_SE_EMPTY.html",
+                "fastqc/SAMPLE_SE_EMPTY.zip",
+                "kraken2",
+                "kraken2/SAMPLE_PE_EMPTY.kraken2.report.txt",
+                "kraken2/SAMPLE_PE_EQUAL.kraken2.report.txt",
+                "kraken2/SAMPLE_PE_UNEQUAL.kraken2.report.txt",
+                "kraken2/SAMPLE_SE.kraken2.report.txt",
+                "kraken2/SAMPLE_SE_EMPTY.kraken2.report.txt",
+                "merge",
+                "merge/fastqs_under_th.txt",
+                "multiqc",
+                "multiqc/multiqc_config.yaml",
+                "multiqc/multiqc_data",
+                "multiqc/multiqc_data/.stub",
+                "multiqc/multiqc_plots",
+                "multiqc/multiqc_plots/.stub",
+                "multiqc/multiqc_report.html",
+                "ngscheckmate",
+                "ngscheckmate/ngscm_plots",
+                "ngscheckmate/ngscm_table.tsv",
+                "ngscheckmate/snp_pt.pdf",
+                "ngscheckmate/snp_pt_all.txt",
+                "ngscheckmate/snp_pt_corr_matrix.txt",
+                "ngscheckmate/snp_pt_matched.txt",
+                "ngscheckmate/vafs",
+                "ngscheckmate/vafs/SAMPLE_PE_EMPTY.vaf",
+                "ngscheckmate/vafs/SAMPLE_PE_EQUAL.vaf",
+                "ngscheckmate/vafs/SAMPLE_PE_UNEQUAL.vaf",
+                "ngscheckmate/vafs/SAMPLE_SE.vaf",
+                "ngscheckmate/vafs/SAMPLE_SE_EMPTY.vaf",
+                "pipeline_info",
+                "pipeline_info/qcpanda_software_mqc_versions.yml",
+                "sankey_plots",
+                "sankey_plots/SAMPLE_PE_EMPTY_sankey_plot.html",
+                "sankey_plots/SAMPLE_PE_EQUAL_sankey_plot.html",
+                "sankey_plots/SAMPLE_PE_UNEQUAL_sankey_plot.html",
+                "sankey_plots/SAMPLE_SE_EMPTY_sankey_plot.html",
+                "sankey_plots/SAMPLE_SE_sankey_plot.html",
+                "seqkit",
+                "seqkit/fastqs_under_th_SAMPLE_PE_EMPTY.txt",
+                "seqkit/fastqs_under_th_SAMPLE_PE_EQUAL.txt",
+                "seqkit/fastqs_under_th_SAMPLE_PE_UNEQUAL.txt",
+                "seqkit/fastqs_under_th_SAMPLE_SE.txt",
+                "seqkit/fastqs_under_th_SAMPLE_SE_EMPTY.txt",
+                "seqkit/sample",
+                "seqkit/stats",
+                "seqkit/stats/SAMPLE_PE_EMPTY.tsv",
+                "seqkit/stats/SAMPLE_PE_EQUAL.tsv",
+                "seqkit/stats/SAMPLE_PE_UNEQUAL.tsv",
+                "seqkit/stats/SAMPLE_SE.tsv",
+                "seqkit/stats/SAMPLE_SE_EMPTY.tsv",
+                "sequali",
+                "sequali/SAMPLE_PE_EMPTY.html",
+                "sequali/SAMPLE_PE_EMPTY.json",
+                "sequali/SAMPLE_PE_EQUAL.html",
+                "sequali/SAMPLE_PE_EQUAL.json",
+                "sequali/SAMPLE_PE_UNEQUAL.html",
+                "sequali/SAMPLE_PE_UNEQUAL.json",
+                "sequali/SAMPLE_SE.html",
+                "sequali/SAMPLE_SE.json",
+                "sequali/SAMPLE_SE_EMPTY.html",
+                "sequali/SAMPLE_SE_EMPTY.json"
+            ],
+            [
+                "SAMPLE_PE_EMPTY.kraken2.report_bracken.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "SAMPLE_PE_EMPTY.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "SAMPLE_PE_EQUAL.kraken2.report_bracken.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "SAMPLE_PE_EQUAL.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "SAMPLE_PE_UNEQUAL.kraken2.report_bracken.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "SAMPLE_PE_UNEQUAL.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "SAMPLE_SE.kraken2.report_bracken.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "SAMPLE_SE.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "SAMPLE_SE_EMPTY.kraken2.report_bracken.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "SAMPLE_SE_EMPTY.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "SAMPLE_PE_EMPTY.fastp.json:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "SAMPLE_PE_EMPTY_R1.fastp.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                "SAMPLE_PE_EMPTY_R2.fastp.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                "SAMPLE_PE_EQUAL.fastp.json:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "SAMPLE_PE_EQUAL_R1.fastp.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                "SAMPLE_PE_EQUAL_R2.fastp.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                "SAMPLE_PE_UNEQUAL.fastp.json:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "SAMPLE_PE_UNEQUAL_R1.fastp.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                "SAMPLE_PE_UNEQUAL_R2.fastp.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                "SAMPLE_SE.fastp.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                "SAMPLE_SE.fastp.json:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "SAMPLE_SE_EMPTY.fastp.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                "SAMPLE_SE_EMPTY.fastp.json:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "SAMPLE_PE_EMPTY_1_screen.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "SAMPLE_PE_EMPTY_2_screen.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "SAMPLE_PE_EQUAL_1_screen.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "SAMPLE_PE_EQUAL_2_screen.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "SAMPLE_PE_UNEQUAL_1_screen.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "SAMPLE_PE_UNEQUAL_2_screen.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "SAMPLE_SE_1_screen.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "SAMPLE_SE_EMPTY_1_screen.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "SAMPLE_PE_EMPTY.html:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "SAMPLE_PE_EMPTY.zip:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "SAMPLE_PE_EQUAL.html:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "SAMPLE_PE_EQUAL.zip:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "SAMPLE_PE_UNEQUAL.html:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "SAMPLE_PE_UNEQUAL.zip:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "SAMPLE_SE.html:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "SAMPLE_SE.zip:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "SAMPLE_SE_EMPTY.html:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "SAMPLE_SE_EMPTY.zip:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "SAMPLE_PE_EMPTY.kraken2.report.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "SAMPLE_PE_EQUAL.kraken2.report.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "SAMPLE_PE_UNEQUAL.kraken2.report.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "SAMPLE_SE.kraken2.report.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "SAMPLE_SE_EMPTY.kraken2.report.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "fastqs_under_th.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                ".stub:md5,d41d8cd98f00b204e9800998ecf8427e",
+                ".stub:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "fastqs_under_th_SAMPLE_PE_EMPTY.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "fastqs_under_th_SAMPLE_PE_EQUAL.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "fastqs_under_th_SAMPLE_PE_UNEQUAL.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "fastqs_under_th_SAMPLE_SE.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "fastqs_under_th_SAMPLE_SE_EMPTY.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "SAMPLE_PE_EMPTY.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "SAMPLE_PE_EQUAL.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "SAMPLE_PE_UNEQUAL.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "SAMPLE_SE.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "SAMPLE_SE_EMPTY.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "SAMPLE_PE_EMPTY.json:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "SAMPLE_PE_EQUAL.json:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "SAMPLE_PE_UNEQUAL.json:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "SAMPLE_SE.json:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "SAMPLE_SE_EMPTY.json:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ]
+        ],
+        "timestamp": "2026-05-26T22:07:43.13491737",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.0"
+        }
+    },
+    "Params: default": {
+        "content": [
+            56,
+            {
+                "BRACKEN_BRACKEN": {
+                    "bracken": "3.0.1"
+                },
+                "BRACKEN_READ_LENGTH": {
+                    "bracken_read_length": "3.12.12"
+                },
+                "FASTP": {
+                    "fastp": "1.1.0"
+                },
+                "FASTQC": {
+                    "fastqc": "0.12.1"
+                },
+                "FASTQSCREEN": {
+                    "fastqscreen": "0.16.0"
                 },
                 "KRAKEN2_KRAKEN2": {
                     "kraken2": "2.1.6",
@@ -48,20 +303,11 @@
                 "SEQUALI": {
                     "sequali": "1.0.2"
                 },
-                "SORTMERNA": {
-                    "sortmerna": "4.3.7"
-                },
-                "SORTMERNA_INDEX": {
-                    "sortmerna": "4.3.7"
-                },
                 "UNTAR_FASTQSCREEN_DB": {
                     "untar": 1.34
                 },
                 "UNTAR_KRAKEN2_DB": {
                     "untar": 1.34
-                },
-                "Workflow": {
-                    "TRON/qcpanda": "v2.0.0"
                 }
             },
             [
@@ -175,7 +421,6 @@
                 "multiqc/multiqc_data/multiqc_kraken.txt",
                 "multiqc/multiqc_data/multiqc_sequali.txt",
                 "multiqc/multiqc_data/multiqc_software_versions.txt",
-                "multiqc/multiqc_data/multiqc_sortmerna.txt",
                 "multiqc/multiqc_data/multiqc_sources.txt",
                 "multiqc/multiqc_data/sequali_adapter_content_from_overlap_table.txt",
                 "multiqc/multiqc_data/sequali_adapter_content_plot.txt",
@@ -194,7 +439,6 @@
                 "multiqc/multiqc_data/sequali_sequence_duplication_levels_plot.txt",
                 "multiqc/multiqc_data/sequali_sequence_length_distribution_plot_read1.txt",
                 "multiqc/multiqc_data/sequali_sequence_length_distribution_plot_read2.txt",
-                "multiqc/multiqc_data/sortmerna-detailed-plot.txt",
                 "multiqc/multiqc_report.html",
                 "ngscheckmate",
                 "ngscheckmate/ngscm_plots",
@@ -226,11 +470,6 @@
                 "seqkit/pair/SAMPLE_PE_UNEQUAL_1.paired.fastq.gz",
                 "seqkit/pair/SAMPLE_PE_UNEQUAL_2.paired.fastq.gz",
                 "seqkit/sample",
-                "seqkit/sample/SAMPLE_PE_EQUAL_R1.sampled.fastq.gz",
-                "seqkit/sample/SAMPLE_PE_EQUAL_R2.sampled.fastq.gz",
-                "seqkit/sample/SAMPLE_PE_UNEQUAL_R1.sampled.fastq.gz",
-                "seqkit/sample/SAMPLE_PE_UNEQUAL_R2.sampled.fastq.gz",
-                "seqkit/sample/SAMPLE_SE_R1.sampled.fastq.gz",
                 "seqkit/stats",
                 "seqkit/stats/SAMPLE_PE_EMPTY.tsv",
                 "seqkit/stats/SAMPLE_PE_EQUAL.tsv",
@@ -243,20 +482,7 @@
                 "sequali/SAMPLE_PE_UNEQUAL.html",
                 "sequali/SAMPLE_PE_UNEQUAL.json",
                 "sequali/SAMPLE_SE.html",
-                "sequali/SAMPLE_SE.json",
-                "sortmerna",
-                "sortmerna/SAMPLE_PE_EQUAL.sortmerna.log",
-                "sortmerna/SAMPLE_PE_UNEQUAL.sortmerna.log",
-                "sortmerna/SAMPLE_SE.sortmerna.log",
-                "sortmerna/idx",
-                "sortmerna/idx/10681887787591324955.bursttrie_0.dat",
-                "sortmerna/idx/10681887787591324955.kmer_0.dat",
-                "sortmerna/idx/10681887787591324955.pos_0.dat",
-                "sortmerna/idx/10681887787591324955.stats",
-                "sortmerna/idx/2169995244134016533.bursttrie_0.dat",
-                "sortmerna/idx/2169995244134016533.kmer_0.dat",
-                "sortmerna/idx/2169995244134016533.pos_0.dat",
-                "sortmerna/idx/2169995244134016533.stats"
+                "sequali/SAMPLE_SE.json"
             ],
             [
                 "SAMPLE_PE_EQUAL.kraken2.report_bracken.txt:md5,ed3623fcdc56f607b7f790677043c6d8",
@@ -321,14 +547,13 @@
                 "kraken-top-n-plot_Species.txt:md5,f9c474a155bd0aea1599aa23b7fc6969",
                 "kraken-top-n-plot_Unclassified.txt:md5,7bf0f6ba5aba20cc7d3da904ea81571e",
                 "multiqc_bracken_bargraph_plot.txt:md5,78b827b3f39774039fd46c35917c26e1",
-                "multiqc_citations.txt:md5,ef2b7be140036c14b5e804ca9f6d5ba8",
+                "multiqc_citations.txt:md5,64d05e984984e81e70339b27e060f88e",
                 "multiqc_fastp.txt:md5,294cf56718dde2956a63758c9d2d2de2",
                 "multiqc_fastq_screen.txt:md5,51f76920fcf29ceb0c995c785bf234c0",
                 "multiqc_fastqc.txt:md5,a4592ed91e436128d495129591c65e02",
-                "multiqc_general_stats.txt:md5,2ea1f844e0d31e3570925c88fe1504d0",
+                "multiqc_general_stats.txt:md5,3897cb201602ae04e28a8c27ef25ad26",
                 "multiqc_kraken.txt:md5,4e0b0cf905a7bd5dee5dccc17070b224",
                 "multiqc_sequali.txt:md5,8da211308ae4573008a6caff8ad7a85b",
-                "multiqc_sortmerna.txt:md5,d6555895cfdddf75e6455ae5635cccdf",
                 "sequali_adapter_content_from_overlap_table.txt:md5,9d462a0c57eacba79ff3e4f0453b0016",
                 "sequali_adapter_content_plot.txt:md5,c4937fa12b378ff007cb5de1f11475e8",
                 "sequali_insert_size_distribution_plot.txt:md5,6e6cea60c2652ccedf0090b72a439db7",
@@ -346,16 +571,10 @@
                 "sequali_sequence_duplication_levels_plot.txt:md5,c3d8106ad3c5e6aa4f979421166aedce",
                 "sequali_sequence_length_distribution_plot_read1.txt:md5,b9f5ef6af72d001ae06c1dd12bad29c6",
                 "sequali_sequence_length_distribution_plot_read2.txt:md5,a81db910910afb229906af92ed02a2df",
-                "sortmerna-detailed-plot.txt:md5,3c594b5ba8ac403b509f316998037b12",
                 "fastqs_under_th_SAMPLE_PE_EMPTY.txt:md5,e0a6a9bb08069d030deea0daf6d83cdb",
                 "fastqs_under_th_SAMPLE_SE_EMPTY.txt:md5,998a8b28b6547a72963a23ba5907026c",
                 "SAMPLE_PE_UNEQUAL_1.paired.fastq.gz:md5,d089a08e67e14541008fd0c9d576af73",
                 "SAMPLE_PE_UNEQUAL_2.paired.fastq.gz:md5,dc495444eefed955de880ebf22660997",
-                "SAMPLE_PE_EQUAL_R1.sampled.fastq.gz:md5,a42f94eeb36d443f169f274e2f0ae161",
-                "SAMPLE_PE_EQUAL_R2.sampled.fastq.gz:md5,55395b2745aa27534abe4f6c53c1722c",
-                "SAMPLE_PE_UNEQUAL_R1.sampled.fastq.gz:md5,d089a08e67e14541008fd0c9d576af73",
-                "SAMPLE_PE_UNEQUAL_R2.sampled.fastq.gz:md5,dc495444eefed955de880ebf22660997",
-                "SAMPLE_SE_R1.sampled.fastq.gz:md5,a42f94eeb36d443f169f274e2f0ae161",
                 "SAMPLE_PE_EMPTY.tsv:md5,db1d8098fba21ca3be9934a6cc0dde37",
                 "SAMPLE_PE_EQUAL.tsv:md5,fb18d5b33212140da7406b97f3589785",
                 "SAMPLE_PE_UNEQUAL.tsv:md5,e4b0cc4307d82b47660e8f814b72fdd5",
@@ -363,72 +582,10 @@
                 "SAMPLE_SE_EMPTY.tsv:md5,db1d8098fba21ca3be9934a6cc0dde37",
                 "SAMPLE_PE_EQUAL.json:md5,f1cc3b7351be0da02790ae5f77388d8a",
                 "SAMPLE_PE_UNEQUAL.json:md5,1dca98d01d0ade475c335e359eb4c8e4",
-                "SAMPLE_SE.json:md5,3785aff18d4eafd0e585b61088fa7110",
-                "10681887787591324955.bursttrie_0.dat:md5,a220b0c9ac2900a636c4159152983296",
-                "10681887787591324955.kmer_0.dat:md5,eb75c955ae487d27d0f8f7422fa04f57",
-                "10681887787591324955.pos_0.dat:md5,dba3847bc6e96a35ad9ab3a6c8037c98",
-                "2169995244134016533.bursttrie_0.dat:md5,fed4cd10c8ed1eef947c4db3ee8e880f",
-                "2169995244134016533.kmer_0.dat:md5,e8a53d041785cb95bdce04708efe8f7d",
-                "2169995244134016533.pos_0.dat:md5,2cbda1fb789f7f28d1e689d0a57443e1"
+                "SAMPLE_SE.json:md5,3785aff18d4eafd0e585b61088fa7110"
             ]
         ],
-        "timestamp": "2026-05-23T18:38:29.755061311",
-        "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "26.04.0"
-        }
-    },
-    "-profile test,singularity --skip_seqkit_sana false": {
-        "content": [
-            {
-                "SEQKIT_SANA": {
-                    "seqkit": "2.10.1"
-                },
-                "SEQKIT_STATS": {
-                    "seqkit": "2.9.0"
-                },
-                "Workflow": {
-                    "TRON/qcpanda": "v2.0.0"
-                }
-            },
-            [
-                "multiqc",
-                "multiqc/multiqc_config.yaml",
-                "multiqc/multiqc_data",
-                "multiqc/multiqc_data/llms-full.txt",
-                "multiqc/multiqc_data/multiqc.log",
-                "multiqc/multiqc_data/multiqc.parquet",
-                "multiqc/multiqc_data/multiqc_citations.txt",
-                "multiqc/multiqc_data/multiqc_data.json",
-                "multiqc/multiqc_data/multiqc_software_versions.txt",
-                "multiqc/multiqc_data/multiqc_sources.txt",
-                "multiqc/multiqc_report.html",
-                "pipeline_info",
-                "pipeline_info/qcpanda_software_mqc_versions.yml",
-                "seqkit",
-                "seqkit/sana",
-                "seqkit/sana/SAMPLE_PE_EQUAL_1.fastq.gz",
-                "seqkit/sana/SAMPLE_PE_EQUAL_1.log",
-                "seqkit/sana/SAMPLE_PE_EQUAL_2.fastq.gz",
-                "seqkit/sana/SAMPLE_PE_EQUAL_2.log",
-                "seqkit/sana/SAMPLE_SE_1.fastq.gz",
-                "seqkit/sana/SAMPLE_SE_1.log",
-                "seqkit/stats",
-                "seqkit/stats/SAMPLE_PE_EQUAL.tsv",
-                "seqkit/stats/SAMPLE_SE.tsv"
-            ],
-            [
-                "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f",
-                "SAMPLE_PE_EQUAL_1.fastq.gz:md5,a42f94eeb36d443f169f274e2f0ae161",
-                "SAMPLE_PE_EQUAL_1.log:md5,449ada13f517be6b88b56ed62d7233b2",
-                "SAMPLE_PE_EQUAL_2.fastq.gz:md5,55395b2745aa27534abe4f6c53c1722c",
-                "SAMPLE_PE_EQUAL_2.log:md5,e3d91ef90ee8cf238a5441b68cf248c4",
-                "SAMPLE_SE_1.fastq.gz:md5,a42f94eeb36d443f169f274e2f0ae161",
-                "SAMPLE_SE_1.log:md5,449ada13f517be6b88b56ed62d7233b2",
-                "SAMPLE_SE.tsv:md5,b65afddf5481c2708b884007dc28bdf4"
-            ]
-        ],
-        "timestamp": "2026-05-23T18:40:46.417691315",
+        "timestamp": "2026-05-26T22:04:39.985454519",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.0"

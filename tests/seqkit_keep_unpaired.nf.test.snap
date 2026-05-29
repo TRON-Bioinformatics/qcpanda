@@ -1,0 +1,48 @@
+{
+    "Params: --seqkit_keep_paired true, --seqkit_keep_unpaired true": {
+        "content": [
+            5,
+            {
+                "SEQKIT_PAIR": {
+                    "seqkit": "2.9.0"
+                },
+                "SEQKIT_STATS": {
+                    "seqkit": "2.9.0"
+                }
+            },
+            [
+                "multiqc",
+                "multiqc/multiqc_config.yaml",
+                "multiqc/multiqc_data",
+                "multiqc/multiqc_data/llms-full.txt",
+                "multiqc/multiqc_data/multiqc.log",
+                "multiqc/multiqc_data/multiqc.parquet",
+                "multiqc/multiqc_data/multiqc_citations.txt",
+                "multiqc/multiqc_data/multiqc_data.json",
+                "multiqc/multiqc_data/multiqc_software_versions.txt",
+                "multiqc/multiqc_data/multiqc_sources.txt",
+                "multiqc/multiqc_report.html",
+                "pipeline_info",
+                "pipeline_info/qcpanda_software_mqc_versions.yml",
+                "seqkit",
+                "seqkit/pair",
+                "seqkit/pair/SAMPLE_PE_UNEQUAL_1.paired.fastq.gz",
+                "seqkit/pair/SAMPLE_PE_UNEQUAL_1.unpaired.fastq.gz",
+                "seqkit/pair/SAMPLE_PE_UNEQUAL_2.paired.fastq.gz",
+                "seqkit/stats",
+                "seqkit/stats/SAMPLE_PE_UNEQUAL.tsv"
+            ],
+            [
+                "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f",
+                "SAMPLE_PE_UNEQUAL_1.paired.fastq.gz:md5,d089a08e67e14541008fd0c9d576af73",
+                "SAMPLE_PE_UNEQUAL_2.paired.fastq.gz:md5,dc495444eefed955de880ebf22660997",
+                "SAMPLE_PE_UNEQUAL.tsv:md5,e4b0cc4307d82b47660e8f814b72fdd5"
+            ]
+        ],
+        "timestamp": "2026-05-27T13:48:30.454217137",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.0"
+        }
+    }
+}

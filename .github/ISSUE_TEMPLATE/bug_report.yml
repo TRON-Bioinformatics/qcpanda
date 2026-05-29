@@ -44,4 +44,4 @@ body:
         * Executor _(e.g. slurm, local)_
         * Container engine _(e.g. Singularity, Docker, Conda)_
         * OS _(e.g. CentOS Linux, Ubuntu, macOS)_
-        * Version of TRON/qcpanda _(e.g. 1.0.0)_
+        * Version of TRON-Bioinformatics/qcpanda _(e.g. 1.0.0)_
