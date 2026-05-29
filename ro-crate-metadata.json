@@ -22,14 +22,17 @@
             "@id": "./",
             "@type": "Dataset",
             "creativeWorkStatus": "Stable",
-            "datePublished": "2026-05-01T16:01:27+00:00",
-            "description": "# TRON-Bioinformatics/qcpanda\n\n[![GitHub Actions CI Status](https://github.com/TRON-Bioinformatics/qcpanda/actions/workflows/nf-test.yml/badge.svg)](https://github.com/TRON-Bioinformatics/qcpanda/actions/workflows/nf-test.yml)\n[![GitHub Actions Linting Status](https://github.com/TRON-Bioinformatics/qcpanda/actions/workflows/linting.yml/badge.svg)](https://github.com/TRON-Bioinformatics/qcpanda/actions/workflows/linting.yml)\n[![nf-test](https://img.shields.io/badge/unit_tests-nf--test-337ab7.svg)](https://www.nf-test.com)\n\n[![Nextflow](https://img.shields.io/badge/version-%E2%89%A525.10.4-green?style=flat&logo=nextflow&logoColor=white&color=%230DC09D&link=https%3A%2F%2Fnextflow.io)](https://www.nextflow.io/)\n[![nf-core template version](https://img.shields.io/badge/nf--core_template-4.0.1-green?style=flat&logo=nfcore&logoColor=white&color=%2324B064&link=https%3A%2F%2Fnf-co.re)](https://github.com/nf-core/tools/releases/tag/4.0.1)\n[![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)\n[![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)\n[![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)\n[![Launch on Seqera Platform](https://img.shields.io/badge/Launch%20%F0%9F%9A%80-Seqera%20Platform-%234256e7)](https://cloud.seqera.io/launch?pipeline=https://github.com/TRON-Bioinformatics/qcpanda)\n\n## Introduction\n\n**TRON-Bioinformatics/qcpanda** is a bioinformatics pipeline for comprehensive quality control of both paired-end and single-end FASTQ data. It performs read sanitisation, adapter trimming, contamination screening against multiple reference genomes, rRNA quantification, taxonomic classification with abundance estimation, and optional sample identity verification. Results from all tools are aggregated into a single interactive MultiQC report including organism composition Sankey plots and custom NGSCheckMate plots.\n\n<!-- ![TRON-Bioinformatics/qcpanda workflow](QC_Panda_schma.png) -->\n<img src=\"assets/QC_Panda_schma.png\" width=\"70%\">\n\nThe pipeline executes the following steps. Steps marked _optional_ are skipped unless the corresponding parameter is supplied:\n\n1. Sanitise reads ([`SeqKit Sana`](https://bioinf.shenwei.me/seqkit/)) \u2014 _optional_\n2. Compute read statistics ([`SeqKit Stats`](https://bioinf.shenwei.me/seqkit/)) and filter samples below a minimum read count threshold\n3. Repair unequal R1/R2 read counts ([`SeqKit Pair`](https://bioinf.shenwei.me/seqkit/)) \u2014 _optional_, paired-end only\n4. Read quality control ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)) \u2014 _optional_\n5. Adapter trimming and quality filtering ([`fastp`](https://github.com/OpenGene/fastp)) \u2014 _optional_\n6. Comprehensive per-sample QC reporting ([`Sequali`](https://github.com/rhpvorderman/sequali)) \u2014 _optional_\n7. Multi-genome contamination screening ([`FastQ Screen`](https://www.bioinformatics.babraham.ac.uk/projects/fastq_screen/)) \u2014 _optional_\n8. rRNA contamination quantification ([`SortMeRNA`](https://github.com/biocore/sortmerna)) \u2014 _optional_\n9. Taxonomic classification ([`Kraken2`](https://github.com/DerrickWood/kraken2)) with species abundance estimation ([`Bracken`](https://github.com/jenniferlu717/Bracken)) and interactive Sankey plots \u2014 _optional_\n10. Sample identity verification ([`NGSCheckMate`](https://github.com/parklab/NGSCheckMate)) \u2014 _optional_\n11. Aggregate QC report ([`MultiQC`](http://multiqc.info/))\n\n## Usage\n\n> [!NOTE]\n> If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/get_started/environment_setup/overview) on how to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/get_started/run-your-first-pipeline) with `-profile test` before running the workflow on actual data.\n\nFirst, prepare a samplesheet with your input data that looks as follows:\n\n`samplesheet.csv`:\n\n```csv\nsample,fastq_1,fastq_2\nSAMPLE_PE1,SAMPLE_PE1_R1.fastq.gz,SAMPLE_PE1_R2.fastq.gz\nSAMPLE_PE2,SAMPLE_PE2_R1.fastq.gz,SAMPLE_PE2_R2.fastq.gz\nSAMPLE_SE1,SAMPLE_SE1_R1.fastq.gz,\n```\n\nEach row represents one sample. Paired-end samples require both `fastq_1` and `fastq_2`; single-end samples leave `fastq_2` empty. Paired-end and single-end samples can be mixed in the same samplesheet. See [`docs/usage.md`](docs/usage.md) for the full samplesheet specification.\n\nOptionally, provide a patient\u2013sample map to group samples by patient for NGSCheckMate analysis and plots:\n\n`patient_map.csv`:\n\n```csv\npatient,sample\nPATIENT_01,SAMPLE_PE1\nPATIENT_01,SAMPLE_PE2\nPATIENT_02,SAMPLE_SE1\n```\n\nNow, you can run the pipeline using:\n\n```bash\nnextflow run TRON-Bioinformatics/qcpanda \\\n   -profile <docker/singularity/.../institute> \\\n   -work-dir <WORKDIR> \\\n   --input samplesheet.csv \\\n   --outdir <OUTDIR> \\\n   --kraken2_db /path/to/kraken2_db \\\n   --bracken_db /path/to/bracken_db \\\n   --fastq_screen_references /path/to/fastq_screen_references.csv \\\n   --ngscm_snp_patternsfile /path/to/SNP.pt \\\n   --ngscm_patient_map patient_map.csv\n```\n\nUse `-profile docker` or `-profile singularity` to run with containers (recommended). Other options include `conda`, `apptainer`, and institute-specific profiles. See the [nf-core docs](https://nf-co.re/docs/running/run-pipelines#profiles) for details.\n\n> [!WARNING]\n> Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_; see [docs](https://nf-co.re/docs/running/run-pipelines#using-parameter-files).\n\n## Credits\n\nTRON-Bioinformatics/qcpanda was originally written by Patrick Sorn, Ivan Baksic, Johannes Hausmann, Jonas Ibn-Salem.\n\nWe thank the following people for their extensive assistance in the development of this pipeline:\n\n- The [nf-core](https://nf-co.re) community for providing the pipeline template and shared infrastructure.\n\n## Contributions and Support\n\nIf you would like to contribute to this pipeline, please see the [contributing guidelines](docs/CONTRIBUTING.md).\n\n## Citations\n\nAn extensive list of references for the tools used by the pipeline can be found in the [`CITATIONS.md`](CITATIONS.md) file.\n\nThis pipeline uses code and infrastructure developed and maintained by the [nf-core](https://nf-co.re) community, reused here under the [MIT license](https://github.com/nf-core/tools/blob/main/LICENSE).\n\n> **The nf-core framework for community-curated bioinformatics pipelines.**\n>\n> Philip Ewels, Alexander Peltzer, Sven Fillinger, Harshil Patel, Johannes Alneberg, Andreas Wilm, Maxime Ulysse Garcia, Paolo Di Tommaso & Sven Nahnsen.\n>\n> _Nat Biotechnol._ 2020 Feb 13. doi: [10.1038/s41587-020-0439-x](https://dx.doi.org/10.1038/s41587-020-0439-x).\n",
+            "datePublished": "2026-05-29T07:57:14+00:00",
+            "description": "# TRON-Bioinformatics/qcpanda\n\n[![GitHub Actions CI Status](https://github.com/TRON-Bioinformatics/qcpanda/actions/workflows/nf-test.yml/badge.svg)](https://github.com/TRON-Bioinformatics/qcpanda/actions/workflows/nf-test.yml)\n[![GitHub Actions Linting Status](https://github.com/TRON-Bioinformatics/qcpanda/actions/workflows/linting.yml/badge.svg)](https://github.com/TRON-Bioinformatics/qcpanda/actions/workflows/linting.yml)\n[![nf-test](https://img.shields.io/badge/unit_tests-nf--test-337ab7.svg)](https://www.nf-test.com)\n\n[![Nextflow](https://img.shields.io/badge/version-%E2%89%A525.10.4-green?style=flat&logo=nextflow&logoColor=white&color=%230DC09D&link=https%3A%2F%2Fnextflow.io)](https://www.nextflow.io/)\n[![nf-core template version](https://img.shields.io/badge/nf--core_template-4.0.1-green?style=flat&logo=nfcore&logoColor=white&color=%2324B064&link=https%3A%2F%2Fnf-co.re)](https://github.com/nf-core/tools/releases/tag/4.0.1)\n[![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)\n[![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)\n[![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)\n[![Launch on Seqera Platform](https://img.shields.io/badge/Launch%20%F0%9F%9A%80-Seqera%20Platform-%234256e7)](https://cloud.seqera.io/launch?pipeline=https://github.com/TRON-Bioinformatics/qcpanda)\n\n## Introduction\n\n**TRON-Bioinformatics/qcpanda** is a bioinformatics pipeline for comprehensive quality control of both paired-end and single-end FASTQ data. It performs read sanitisation, adapter trimming, contamination screening against multiple reference genomes, rRNA quantification, taxonomic classification with abundance estimation, and optional sample identity verification. Results from all tools are aggregated into a single interactive MultiQC report including organism composition Sankey plots and custom NGSCheckMate plots.\n\n<!-- ![TRON-Bioinformatics/qcpanda workflow](QC_Panda_schma.png) -->\n<img src=\"assets/QC_Panda_schma.png\" width=\"70%\">\n\nThe pipeline executes the following steps. Steps marked _optional_ are skipped unless the corresponding parameter is supplied:\n\n1. Sanitise reads ([`SeqKit Sana`](https://bioinf.shenwei.me/seqkit/)) — _optional_\n2. Compute read statistics ([`SeqKit Stats`](https://bioinf.shenwei.me/seqkit/)) and filter samples below a minimum read count threshold\n3. Repair unequal R1/R2 read counts ([`SeqKit Pair`](https://bioinf.shenwei.me/seqkit/)) — _optional_, paired-end only\n4. Read quality control ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)) — _optional_\n5. Adapter trimming and quality filtering ([`fastp`](https://github.com/OpenGene/fastp)) — _optional_\n6. Comprehensive per-sample QC reporting ([`Sequali`](https://github.com/rhpvorderman/sequali)) — _optional_\n7. Multi-genome contamination screening ([`FastQ Screen`](https://www.bioinformatics.babraham.ac.uk/projects/fastq_screen/)) — _optional_\n8. rRNA contamination quantification ([`SortMeRNA`](https://github.com/biocore/sortmerna)) — _optional_\n9. Taxonomic classification ([`Kraken2`](https://github.com/DerrickWood/kraken2)) with species abundance estimation ([`Bracken`](https://github.com/jenniferlu717/Bracken)) and interactive Sankey plots — _optional_\n10. Sample identity verification ([`NGSCheckMate`](https://github.com/parklab/NGSCheckMate)) — _optional_\n11. Aggregate QC report ([`MultiQC`](http://multiqc.info/))\n\n## Usage\n\n> [!NOTE]\n> If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/get_started/environment_setup/overview) on how to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/get_started/run-your-first-pipeline) with `-profile test` before running the workflow on actual data.\n\nFirst, prepare a samplesheet with your input data that looks as follows:\n\n`samplesheet.csv`:\n\n```csv\nsample,fastq_1,fastq_2\nSAMPLE_PE1,SAMPLE_PE1_R1.fastq.gz,SAMPLE_PE1_R2.fastq.gz\nSAMPLE_PE2,SAMPLE_PE2_R1.fastq.gz,SAMPLE_PE2_R2.fastq.gz\nSAMPLE_SE1,SAMPLE_SE1_R1.fastq.gz,\n```\n\nEach row represents one sample. Paired-end samples require both `fastq_1` and `fastq_2`; single-end samples leave `fastq_2` empty. Paired-end and single-end samples can be mixed in the same samplesheet. See [`docs/usage.md`](docs/usage.md) for the full samplesheet specification.\n\nOptionally, provide a patient–sample map to group samples by patient for NGSCheckMate analysis and plots:\n\n`patient_map.csv`:\n\n```csv\npatient,sample\nPATIENT_01,SAMPLE_PE1\nPATIENT_01,SAMPLE_PE2\nPATIENT_02,SAMPLE_SE1\n```\n\nNow, you can run the pipeline using:\n\n```bash\nnextflow run TRON-Bioinformatics/qcpanda \\\n   -profile <docker/singularity/.../institute> \\\n   -work-dir <WORKDIR> \\\n   --input samplesheet.csv \\\n   --outdir <OUTDIR> \\\n   --kraken2_db /path/to/kraken2_db \\\n   --bracken_db /path/to/bracken_db \\\n   --fastq_screen_references /path/to/fastq_screen_references.csv \\\n   --ngscm_snp_patternsfile /path/to/SNP.pt \\\n   --ngscm_patient_map patient_map.csv\n```\n\nUse `-profile docker` or `-profile singularity` to run with containers (recommended). Other options include `conda`, `apptainer`, and institute-specific profiles. See the [nf-core docs](https://nf-co.re/docs/running/run-pipelines#profiles) for details.\n\n> [!WARNING]\n> Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_; see [docs](https://nf-co.re/docs/running/run-pipelines#using-parameter-files).\n\n## Credits\n\nTRON-Bioinformatics/qcpanda was originally written by Patrick Sorn, Ivan Baksic, Johannes Hausmann, Jonas Ibn-Salem.\n\nWe thank the following people for their extensive assistance in the development of this pipeline:\n\n- The [nf-core](https://nf-co.re) community for providing the pipeline template and shared infrastructure.\n\n## Contributions and Support\n\nIf you would like to contribute to this pipeline, please see the [contributing guidelines](docs/CONTRIBUTING.md).\n\n## Citations\n\nAn extensive list of references for the tools used by the pipeline can be found in the [`CITATIONS.md`](CITATIONS.md) file.\n\nThis pipeline uses code and infrastructure developed and maintained by the [nf-core](https://nf-co.re) community, reused here under the [MIT license](https://github.com/nf-core/tools/blob/main/LICENSE).\n\n> **The nf-core framework for community-curated bioinformatics pipelines.**\n>\n> Philip Ewels, Alexander Peltzer, Sven Fillinger, Harshil Patel, Johannes Alneberg, Andreas Wilm, Maxime Ulysse Garcia, Paolo Di Tommaso & Sven Nahnsen.\n>\n> _Nat Biotechnol._ 2020 Feb 13. doi: [10.1038/s41587-020-0439-x](https://dx.doi.org/10.1038/s41587-020-0439-x).\n",
             "hasPart": [
                 {
                     "@id": "main.nf"
                 },
                 {
                     "@id": "assets/"
+                },
+                {
+                    "@id": "bin/"
                 },
                 {
                     "@id": "conf/"
@@ -39,6 +42,9 @@
                 },
                 {
                     "@id": "modules/"
+                },
+                {
+                    "@id": "modules/local/"
                 },
                 {
                     "@id": "modules/nf-core/"
@@ -81,9 +87,6 @@
                 },
                 {
                     "@id": ".pre-commit-config.yaml"
-                },
-                {
-                    "@id": ".prettierignore"
                 }
             ],
             "isBasedOn": "https://github.com/TRON-Bioinformatics/qcpanda",
@@ -93,7 +96,7 @@
             },
             "mentions": [
                 {
-                    "@id": "#4ffa4953-559f-4f37-9df6-6f5717632299"
+                    "@id": "#c1c71cbf-b524-4461-b224-cb1e366cce6e"
                 }
             ],
             "name": "TRON-Bioinformatics/qcpanda"
@@ -120,22 +123,24 @@
                 "SoftwareSourceCode",
                 "ComputationalWorkflow"
             ],
-            "contributor": [
+            "author": [
                 {
                     "@id": "https://orcid.org/0000-0001-6179-3014"
                 },
                 {
-                    "@id": "#b1fcf584-c62d-489c-8b90-00ab81b489ac"
-                },
+                    "@id": "#baksic.ivan@hotmail.com"
+                }
+            ],
+            "contributor": [
                 {
-                    "@id": "#cf5e6836-afcc-452e-bdd3-66a687646cba"
+                    "@id": "#johannes.hausmann@tron-mainz.de"
                 },
                 {
                     "@id": "https://orcid.org/0000-0001-9886-113X"
                 }
             ],
             "dateCreated": "",
-            "dateModified": "2026-05-01T18:01:27Z",
+            "dateModified": "2026-05-29T09:57:14Z",
             "dct:conformsTo": "https://bioschemas.org/profiles/ComputationalWorkflow/1.0-RELEASE/",
             "keywords": [
                 "nf-core",
@@ -143,6 +148,11 @@
             ],
             "license": [
                 "MIT"
+            ],
+            "maintainer": [
+                {
+                    "@id": "#baksic.ivan@hotmail.com"
+                }
             ],
             "name": [
                 "TRON-Bioinformatics/qcpanda"
@@ -155,10 +165,10 @@
             },
             "url": [
                 "https://github.com/TRON-Bioinformatics/qcpanda",
-                "https://nf-co.re/TRON-Bioinformatics/qcpanda/2.0.0/"
+                "https://nf-co.re/TRON-Bioinformatics/qcpanda/2.0.1/"
             ],
             "version": [
-                "2.0.0"
+                "2.0.1"
             ]
         },
         {
@@ -174,11 +184,11 @@
             "version": "!>=25.10.4"
         },
         {
-            "@id": "#4ffa4953-559f-4f37-9df6-6f5717632299",
+            "@id": "#c1c71cbf-b524-4461-b224-cb1e366cce6e",
             "@type": "TestSuite",
             "instance": [
                 {
-                    "@id": "#95c2bc58-5b45-4bdb-8f94-fea856eb8f99"
+                    "@id": "#ec65e071-5776-4bfb-b22a-5bae46542367"
                 }
             ],
             "mainEntity": {
@@ -187,7 +197,7 @@
             "name": "Test suite for TRON-Bioinformatics/qcpanda"
         },
         {
-            "@id": "#95c2bc58-5b45-4bdb-8f94-fea856eb8f99",
+            "@id": "#ec65e071-5776-4bfb-b22a-5bae46542367",
             "@type": "TestInstance",
             "name": "GitHub Actions workflow for testing TRON-Bioinformatics/qcpanda",
             "resource": "repos/TRON-Bioinformatics/qcpanda/actions/workflows/nf-test.yml",
@@ -210,6 +220,11 @@
             "description": "Additional files"
         },
         {
+            "@id": "bin/",
+            "@type": "Dataset",
+            "description": "Scripts that must be callable from a pipeline process"
+        },
+        {
             "@id": "conf/",
             "@type": "Dataset",
             "description": "Configuration files"
@@ -223,6 +238,11 @@
             "@id": "modules/",
             "@type": "Dataset",
             "description": "Modules used by the pipeline"
+        },
+        {
+            "@id": "modules/local/",
+            "@type": "Dataset",
+            "description": "Pipeline-specific modules"
         },
         {
             "@id": "modules/nf-core/",
@@ -295,11 +315,6 @@
             "description": "Configuration file for pre-commit hooks"
         },
         {
-            "@id": ".prettierignore",
-            "@type": "File",
-            "description": "Ignore file for prettier"
-        },
-        {
             "@id": "https://nf-co.re/",
             "@type": "Organization",
             "name": "nf-core",
@@ -308,22 +323,33 @@
         {
             "@id": "https://orcid.org/0000-0001-6179-3014",
             "@type": "Person",
-            "name": "Patrick Sorn"
+            "affiliation": "TRON gGmbH",
+            "name": "Patrick Sorn",
+            "url": "https://github.com/sorn-tron"
         },
         {
-            "@id": "#b1fcf584-c62d-489c-8b90-00ab81b489ac",
+            "@id": "#baksic.ivan@hotmail.com",
             "@type": "Person",
-            "name": "Ivan Baksic"
+            "affiliation": "TRON gGmbH",
+            "email": "baksic.ivan@hotmail.com",
+            "name": "Ivan Baksic",
+            "url": "https://github.com/Baksic-Ivan/"
         },
         {
-            "@id": "#cf5e6836-afcc-452e-bdd3-66a687646cba",
+            "@id": "#johannes.hausmann@tron-mainz.de",
             "@type": "Person",
-            "name": "Johannes Hausmann"
+            "affiliation": "TRON gGmbH",
+            "email": "johannes.hausmann@tron-mainz.de",
+            "name": "Johannes Hausmann",
+            "url": "https://github.com/johausmann/"
         },
         {
             "@id": "https://orcid.org/0000-0001-9886-113X",
             "@type": "Person",
-            "name": "Jonas Ibn-Salem"
+            "affiliation": "TRON gGmbH",
+            "email": "jonas.ibn-salem@tron-mainz.de",
+            "name": "Jonas Ibn-Salem",
+            "url": "https://github.com/ibn-salem"
         }
     ]
 }
