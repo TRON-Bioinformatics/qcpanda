@@ -3,6 +3,20 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v2.0.2 - [unreleased]
+
+### `Added`
+
+- `--unclassified_ratio_th` parameter (default `0.8`) to control Bracken execution based on Kraken2 unclassified-read fraction per sample.
+
+### `Changed`
+
+- Bracken now runs only for samples with `unclassified_ratio < --unclassified_ratio_th`, using `KRAKEN2_RATIOS` output as a pre-filter.
+
+### `Fixed`
+
+- Added `.ifEmpty([])` after `.collect()` on `ch_bracken_tsvs` and `ch_sankey_htmls` to prevent `GENERATE_MULTIQC_CONFIG` and `MULTIQC` from hanging when all samples are filtered out by `--unclassified_ratio_th`.
+
 ## v2.0.1 - 2026-05-29
 
 ### `Added`

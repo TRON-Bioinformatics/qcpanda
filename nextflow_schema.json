@@ -154,6 +154,14 @@
           "description": "Path to Bracken database directory or .tar.gz archive containing kmer_distrib files. If a .tar.gz file is provided it is unpacked automatically at runtime. May be the same as kraken2_db. Required when skip_bracken is false.",
           "fa_icon": "fas fa-database"
         },
+        "unclassified_ratio_th": {
+          "type": "number",
+          "default": 0.8,
+          "description": "Maximum unclassified fraction (0-1) from Kraken2 required to run Bracken on a sample. Samples with unclassified ratio greater than or equal to this threshold are skipped for Bracken.",
+          "fa_icon": "fas fa-sliders-h",
+          "minimum": 0,
+          "maximum": 1
+        },
         "skip_sankey": {
           "type": "boolean",
           "default": false,
