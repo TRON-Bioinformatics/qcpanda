@@ -293,7 +293,24 @@ workflow QCPANDA {
         }
 
         // Determine best Bracken k-mer length, then run Bracken abundance estimation
+        // only for samples with unclassified ratio below the configured threshold.
         if (!params.skip_bracken) {
+            def ch_reports_for_bracken = KRAKEN2_KRAKEN2.out.report
+                .join(KRAKEN2_RATIOS.out.ratios)
+                .filter { _meta, _report, ratios ->
+                    def lines = ratios.trim().split('\n')
+                    lines.size() >= 1 && lines[0].toDouble() < params.unclassified_ratio_th
+                }
+                .map { meta, report, _ratios -> [ meta, report ] }
+
+            def ch_reads_for_bracken = ch_reads_for_kraken
+                .join(KRAKEN2_RATIOS.out.ratios)
+                .filter { _meta, _reads, ratios ->
+                    def lines = ratios.trim().split('\n')
+                    lines.size() >= 1 && lines[0].toDouble() < params.unclassified_ratio_th
+                }
+                .map { meta, reads, _ratios -> [ meta, reads ] }
+
             // Prepare Bracken database channel:
             // Accepts either a directory path or a .tar.gz archive; the archive is unpacked at runtime.
             // If bracken_db points to the same archive as kraken2_db, reuse the already-unpacked channel.
@@ -307,12 +324,9 @@ workflow QCPANDA {
                 ch_bracken_db = channel.value(file(params.bracken_db, checkIfExists: true))
             }
 
-            BRACKEN_READ_LENGTH(
-                ch_reads_for_kraken,
-                ch_bracken_db
-            )
+            BRACKEN_READ_LENGTH(ch_reads_for_bracken, ch_bracken_db)
             BRACKEN_BRACKEN(
-                KRAKEN2_KRAKEN2.out.report
+                ch_reports_for_bracken
                     .join(BRACKEN_READ_LENGTH.out.read_length)
                     .map { meta, report, klen -> [ meta + [read_length: klen.trim()], report ] },
                 ch_bracken_db
@@ -320,12 +334,14 @@ workflow QCPANDA {
             ch_bracken_tsvs = BRACKEN_BRACKEN.out.reports
                 .map { _meta, tsv -> tsv }
                 .collect()
+                .ifEmpty([])
 
             if (!params.skip_sankey) {
                 SANKEY_PLOT(BRACKEN_BRACKEN.out.txt)
                 ch_sankey_htmls = SANKEY_PLOT.out.html
                     .map { _meta, html -> html }
                     .collect()
+                    .ifEmpty([])
             }
         }
 

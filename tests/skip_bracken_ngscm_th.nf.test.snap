@@ -1,11 +1,14 @@
 {
-    "Params: --skip_ngscm true": {
+    "Params: --skip_bracken true --execute_ngscm_threshold 0.0": {
         "content": [
-            8,
+            9,
             {
                 "KRAKEN2_KRAKEN2": {
                     "kraken2": "2.1.6",
                     "pigz": 2.8
+                },
+                "KRAKEN2_RATIOS": {
+                    "gawk": "5.3.0, API 4.0, PMA Avon 8-g1, (GNU MPFR 4.2.1, GNU MP 6.3.0)"
                 },
                 "SEQKIT_SAMPLE": {
                     "seqkit": "2.13.0"
@@ -64,7 +67,7 @@
                 "SAMPLE_PE_EQUAL.tsv:md5,fb18d5b33212140da7406b97f3589785"
             ]
         ],
-        "timestamp": "2026-05-26T22:37:37.581823188",
+        "timestamp": "2026-06-05T12:22:59.374840678",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.0"
