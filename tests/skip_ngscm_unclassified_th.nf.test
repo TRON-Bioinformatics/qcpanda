@@ -1,12 +1,12 @@
 nextflow_pipeline {
 
-    name "Test pipeline skip_ngscm true"
+    name "Test pipeline skip_ngscm true unclassified_ratio_th 0.0"
     script "../main.nf"
     tag "pipeline"
 
     def TESTDATA = "https://raw.githubusercontent.com/TRON-Bioinformatics/test-datasets/qcpanda/default/"
 
-    test("Params: --skip_ngscm true") {
+    test("Params: --skip_ngscm true --unclassified_ratio_th 0.0") {
 
         setup {
             def csv = new File("$outputDir/samplesheet.csv")
@@ -22,7 +22,7 @@ nextflow_pipeline {
                 outdir            = "$outputDir"
                 input             = "$outputDir/samplesheet.csv"
                 skip_ngscm        = true
-                skip_bracken      = true
+                skip_bracken      = false
                 skip_seqkit_sana  = true
                 skip_seqkit_pair  = true
                 skip_fastqc       = true
@@ -31,6 +31,7 @@ nextflow_pipeline {
                 skip_fastq_screen = true
                 skip_sortmerna    = true
                 skip_kraken2      = false
+                unclassified_ratio_th = 0.0
                 skip_sankey       = true
             }
         }

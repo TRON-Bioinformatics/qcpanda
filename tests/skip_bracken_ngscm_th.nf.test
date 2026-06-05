@@ -1,12 +1,12 @@
 nextflow_pipeline {
 
-    name "Test pipeline skip_bracken true"
+    name "Test pipeline skip_bracken true --execute_ngscm_threshold 0.0"
     script "../main.nf"
     tag "pipeline"
 
     def TESTDATA = "https://raw.githubusercontent.com/TRON-Bioinformatics/test-datasets/qcpanda/default/"
 
-    test("Params: --skip_bracken true") {
+    test("Params: --skip_bracken true --execute_ngscm_threshold 0.0") {
 
         setup {
             def csv = new File("$outputDir/samplesheet.csv")
@@ -32,7 +32,8 @@ nextflow_pipeline {
                 skip_kraken2      = false
                 skip_bracken      = true
                 skip_sankey       = false
-                skip_ngscm        = true
+                skip_ngscm        = false
+                execute_ngscm_threshold = 1.0
             }
         }
 
